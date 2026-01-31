@@ -110,6 +110,8 @@ export default function DashboardLayout({
   const [searching, setSearching] = useState(false);
   const searchRef = useRef<HTMLDivElement>(null);
   const searchTimeoutRef = useRef<NodeJS.Timeout | undefined>(undefined);
+  const isNavigatingRef = useRef(false); // Track when Enter is pressed to prevent URL clearing
+  const prevSearchQueryRef = useRef(''); // Track previous query to detect user clearing
 
   // User profile state
   const [userProfile, setUserProfile] = useState<{ firstName: string; lastName: string; profilePicture?: string } | null>(null);
@@ -217,23 +219,8 @@ export default function DashboardLayout({
     }
 
     if (searchQuery.trim().length >= 1) { // Allow single char if needed, but usually 2
-      // Update URL
-      const timeoutId = setTimeout(() => {
-        const params = new URLSearchParams(window.location.search);
-        params.set('q', searchQuery);
-        // Only update type if it changes or is set
-        if (searchType && searchType !== 'all') {
-          params.set('type', searchType);
-        } else {
-          params.delete('type');
-        }
-
-        router.push(`/dashboard?${params.toString()}`);
-      }, 500); // 500ms debounce for URL update
-
-      // Also fetch for dropdown preview
+      // Fetch for dropdown preview (immediate)
       setSearching(true);
-      // We keep the shorter debounce for immediate UI feedback in dropdown
       const dropdownTimeoutId = setTimeout(async () => {
         try {
           const response = await fetch(
@@ -249,25 +236,49 @@ export default function DashboardLayout({
         } finally {
           setSearching(false);
         }
-      }, 300);
+      }, 150); // Shorter delay for responsive UI
+
+      // Update URL with debounce (separate from dropdown)
+      const urlTimeoutId = setTimeout(() => {
+        const params = new URLSearchParams(window.location.search);
+        params.set('q', searchQuery);
+        // Only update type if it changes or is set
+        if (searchType && searchType !== 'all') {
+          params.set('type', searchType);
+        } else {
+          params.delete('type');
+        }
+
+        // Use replace instead of push to avoid adding to browser history
+        router.replace(`/dashboard?${params.toString()}`);
+      }, 500); // 500ms debounce for URL update
 
       searchTimeoutRef.current = dropdownTimeoutId;
 
       return () => {
-        clearTimeout(timeoutId);
         clearTimeout(dropdownTimeoutId);
+        clearTimeout(urlTimeoutId);
       };
     } else {
       setSearchResults([]);
       setSearchOpen(false);
 
-      // If query cleared, remove from URL
-      const params = new URLSearchParams(window.location.search);
-      if (params.has('q')) {
-        params.delete('q');
-        router.replace(`/dashboard?${params.toString()}`);
+      // Only clear URL if user actually typed and then cleared the search
+      // (previous query was non-empty, now it's empty)
+      // This prevents clearing URL on initial mount or after navigation
+      if (prevSearchQueryRef.current && prevSearchQueryRef.current.length >= 1) {
+        const urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.has('q')) {
+          urlParams.delete('q');
+          urlParams.delete('type');
+          const newUrl = urlParams.toString() ? `/dashboard?${urlParams.toString()}` : '/dashboard';
+          router.replace(newUrl);
+        }
       }
     }
+
+    // Update prev ref after effect runs
+    prevSearchQueryRef.current = searchQuery;
   }, [searchQuery, searchType, router]);
 
   const handleLogout = async () => {
@@ -316,14 +327,19 @@ export default function DashboardLayout({
   };
 
   const handleSearchResultClick = (result: SearchResult) => {
+    // Close dropdown and clear search to navigate directly to the item's location
     setSearchOpen(false);
     setSearchQuery('');
+    setSearchResults([]);
 
     if (result.type === 'folder') {
+      // For folders, navigate directly into the folder
       router.push(`/dashboard?folder=${result._id}`);
     } else if (result.parentId) {
+      // For files, navigate to the parent folder containing the file
       router.push(`/dashboard?folder=${result.parentId}`);
     } else {
+      // For root files, just go to the root dashboard
       router.push('/dashboard');
     }
   };
@@ -352,11 +368,12 @@ export default function DashboardLayout({
   return (
     <div className="flex h-screen bg-gray-50">
       <Suspense fallback={null}>
-        <SearchHandler 
+        <SearchHandler
           onSearchQueryChange={setSearchQuery}
           onSearchTypeChange={setSearchType}
           onSearchOpenChange={setSearchOpen}
           searchQuery={searchQuery}
+          searchType={searchType}
           setSearchOpen={setSearchOpen}
         />
       </Suspense>
@@ -428,13 +445,7 @@ export default function DashboardLayout({
           <div ref={searchRef} className="relative flex-1 max-w-3xl mx-auto px-4 flex items-center gap-2">
             <div className="relative flex-1">
               <Search size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 z-10" />
-              {/* Form wrapper to trick password managers */}
-              <form
-                action="."
-                autoComplete="off"
-                onSubmit={(e) => e.preventDefault()}
-                className="w-full relative"
-              >
+              <div className="w-full relative">
                 {/* Hidden fake fields to trap autofill */}
                 <input type="text" name="fake_username" className="hidden" aria-hidden="true" />
                 <input type="password" name="fake_password" className="hidden" aria-hidden="true" />
@@ -447,6 +458,35 @@ export default function DashboardLayout({
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   onFocus={() => searchQuery.length >= 2 && setSearchOpen(true)}
+                  onKeyDown={(e) => {
+                    // Prevent form submission on Enter key
+                    if (e.key === 'Enter') {
+                      e.preventDefault();
+                      e.stopPropagation();
+
+                      // Close dropdown - results will be shown in main content area
+                      setSearchOpen(false);
+
+                      // Update URL immediately without debounce for Enter key
+                      if (searchQuery.length >= 1) {
+                        // Set navigating flag to prevent URL clearing in effect
+                        isNavigatingRef.current = true;
+
+                        const params = new URLSearchParams();
+                        params.set('q', searchQuery);
+                        if (searchType && searchType !== 'all') {
+                          params.set('type', searchType);
+                        }
+                        // Use push instead of replace to allow back navigation
+                        router.push(`/dashboard?${params.toString()}`);
+
+                        // Reset the flag after navigation completes
+                        setTimeout(() => {
+                          isNavigatingRef.current = false;
+                        }, 100);
+                      }
+                    }
+                  }}
                   className="pl-10 pr-4 py-2 w-full"
                   autoComplete="off"
                   autoCorrect="off"
@@ -454,7 +494,7 @@ export default function DashboardLayout({
                   data-lpignore="true"
                   data-form-type="other"
                 />
-              </form>
+              </div>
               {searching && (
                 <div className="absolute right-3 top-1/2 -translate-y-1/2">
                   <div className="w-4 h-4 border-2 border-blue-200 border-t-blue-600 rounded-full animate-spin" />

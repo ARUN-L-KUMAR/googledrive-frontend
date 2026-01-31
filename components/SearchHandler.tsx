@@ -8,6 +8,7 @@ interface SearchHandlerProps {
   onSearchTypeChange: (type: string) => void;
   onSearchOpenChange: (open: boolean) => void;
   searchQuery: string;
+  searchType: string;
   setSearchOpen: (open: boolean) => void;
 }
 
@@ -16,6 +17,7 @@ export default function SearchHandler({
   onSearchTypeChange,
   onSearchOpenChange,
   searchQuery,
+  searchType,
   setSearchOpen
 }: SearchHandlerProps) {
   const searchParams = useSearchParams();
@@ -23,15 +25,21 @@ export default function SearchHandler({
   // Initialize search from URL
   useEffect(() => {
     const q = searchParams.get('q');
-    if (q) {
-      onSearchQueryChange(q);
-      onSearchOpenChange(true);
-    }
     const type = searchParams.get('type');
-    if (type) {
+    
+    // Only update if values have actually changed to prevent infinite loops
+    if (q && q !== searchQuery) {
+      onSearchQueryChange(q);
+    }
+    if (type && type !== searchType) {
       onSearchTypeChange(type);
     }
-  }, [searchParams, onSearchQueryChange, onSearchTypeChange, onSearchOpenChange]);
+    
+    // Keep search open if there's a query
+    if (q) {
+      onSearchOpenChange(true);
+    }
+  }, [searchParams]); // Remove the other dependencies to prevent circular updates
 
   // Close search when query is cleared
   useEffect(() => {
