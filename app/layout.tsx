@@ -13,8 +13,14 @@ export const metadata: Metadata = {
   description: 'CloudDrive is a secure cloud storage platform. Store, share, and collaborate on your files with bank-grade encryption. Get 5GB free storage to get started.',
   generator: 'v0.app',
   icons: {
-    icon: '/favicon.svg',
-    apple: '/apple-icon.png',
+    icon: [
+      { url: '/favicon.svg', media: '(prefers-color-scheme: light)' },
+      { url: '/favicon-dark.svg', media: '(prefers-color-scheme: dark)' },
+    ],
+    apple: [
+      { url: '/apple-icon.png', media: '(prefers-color-scheme: light)' },
+      { url: '/apple-icon-dark.svg', media: '(prefers-color-scheme: dark)' },
+    ],
   },
 }
 
