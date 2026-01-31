@@ -11,7 +11,6 @@ const _geistMono = Geist_Mono({ subsets: ["latin"] });
 export const metadata: Metadata = {
   title: 'CloudDrive - Secure Cloud Storage',
   description: 'CloudDrive is a secure cloud storage platform. Store, share, and collaborate on your files with bank-grade encryption. Get 5GB free storage to get started.',
-  generator: 'v0.app',
   icons: {
     icon: [
       { url: '/favicon-dark.svg', media: '(prefers-color-scheme: light)' },

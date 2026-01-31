@@ -3,7 +3,7 @@ import bcrypt from 'bcryptjs';
 
 export interface IUser extends Document {
   email: string;
-  password: string;
+  password?: string;
   firstName: string;
   lastName: string;
   profilePicture?: string;
@@ -12,6 +12,8 @@ export interface IUser extends Document {
   emailVerificationExpires?: Date;
   passwordResetToken?: string;
   passwordResetExpires?: Date;
+  googleId?: string;
+  authProvider: 'local' | 'google';
   storageUsed: number;
   storageLimit: number;
   createdAt: Date;
@@ -31,7 +33,9 @@ const UserSchema = new Schema<IUser>(
     },
     password: {
       type: String,
-      required: true,
+      required: function (this: IUser) {
+        return this.authProvider === 'local';
+      },
       minlength: 6,
       select: false,
     },
@@ -57,6 +61,16 @@ const UserSchema = new Schema<IUser>(
     emailVerificationExpires: Date,
     passwordResetToken: String,
     passwordResetExpires: Date,
+    googleId: {
+      type: String,
+      unique: true,
+      sparse: true,
+    },
+    authProvider: {
+      type: String,
+      enum: ['local', 'google'],
+      default: 'local',
+    },
     storageUsed: {
       type: Number,
       default: 0,
@@ -69,9 +83,9 @@ const UserSchema = new Schema<IUser>(
   { timestamps: true }
 );
 
-// Hash password before saving
+// Hash password before saving (only for local auth users)
 UserSchema.pre('save', async function () {
-  if (!this.isModified('password')) {
+  if (!this.isModified('password') || !this.password) {
     return;
   }
 

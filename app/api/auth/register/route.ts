@@ -36,6 +36,7 @@ export async function POST(request: NextRequest) {
       lastName,
       email,
       password,
+      authProvider: 'local',
       emailVerificationToken,
       emailVerificationExpires,
     });
