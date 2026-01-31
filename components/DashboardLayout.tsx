@@ -2,7 +2,8 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useRouter } from 'next/navigation';
+import { Suspense } from 'react';
 import {
   Cloud,
   Home,
@@ -45,6 +46,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { Input } from '@/components/ui/input';
 import FileUpload from '@/components/FileUpload';
+import SearchHandler from '@/components/SearchHandler';
 
 interface DashboardLayoutProps {
   children: React.ReactNode | ((actions: { onUploadClick: () => void; onNewFolderClick: () => void }) => React.ReactNode);
@@ -195,20 +197,7 @@ export default function DashboardLayout({
     fetchProfile();
   }, []);
 
-  const searchParams = useSearchParams();
-
-  // Initialize search from URL
-  useEffect(() => {
-    const q = searchParams.get('q');
-    if (q) {
-      setSearchQuery(q);
-      setSearchOpen(true);
-    }
-    const type = searchParams.get('type');
-    if (type) {
-      setSearchType(type);
-    }
-  }, []);
+  // Search handler component handles search params
 
   // Handle click outside to close search
   useEffect(() => {
@@ -362,6 +351,15 @@ export default function DashboardLayout({
 
   return (
     <div className="flex h-screen bg-gray-50">
+      <Suspense fallback={null}>
+        <SearchHandler 
+          onSearchQueryChange={setSearchQuery}
+          onSearchTypeChange={setSearchType}
+          onSearchOpenChange={setSearchOpen}
+          searchQuery={searchQuery}
+          setSearchOpen={setSearchOpen}
+        />
+      </Suspense>
       {/* Sidebar */}
       <aside
         className={`${sidebarOpen ? 'w-64' : 'w-0'
