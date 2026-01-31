@@ -22,6 +22,23 @@ interface GoogleUserInfo {
     picture: string;
 }
 
+function getAppUrl(request: NextRequest): string {
+    // First check if we stored the origin in a cookie
+    const storedOrigin = request.cookies.get('oauth_origin')?.value;
+    if (storedOrigin) {
+        return storedOrigin;
+    }
+
+    // Fall back to headers
+    const forwardedHost = request.headers.get('x-forwarded-host');
+    const forwardedProto = request.headers.get('x-forwarded-proto') || 'https';
+    const host = forwardedHost || request.headers.get('host') || 'localhost:3001';
+
+    const protocol = host.includes('localhost') ? 'http' : forwardedProto;
+
+    return `${protocol}://${host}`;
+}
+
 export async function GET(request: NextRequest) {
     try {
         const searchParams = request.nextUrl.searchParams;
@@ -29,7 +46,7 @@ export async function GET(request: NextRequest) {
         const state = searchParams.get('state');
         const error = searchParams.get('error');
 
-        const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';
+        const appUrl = getAppUrl(request);
 
         // Handle OAuth errors
         if (error) {
@@ -147,20 +164,21 @@ export async function GET(request: NextRequest) {
         // Set auth cookie
         response.cookies.set('auth_token', token, {
             httpOnly: true,
-            secure: process.env.NODE_ENV === 'production',
+            secure: !appUrl.includes('localhost'),
             sameSite: 'lax',
             maxAge: 7 * 24 * 60 * 60, // 7 days
             path: '/',
         });
 
-        // Clear OAuth state cookie
+        // Clear OAuth cookies
         response.cookies.delete('oauth_state');
+        response.cookies.delete('oauth_origin');
 
         console.log('[OAuth Callback] Login successful, redirecting to dashboard');
         return response;
     } catch (error) {
         console.error('[OAuth Callback] Error:', error);
-        const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';
+        const appUrl = getAppUrl(request);
         return NextResponse.redirect(`${appUrl}/login?error=oauth_error`);
     }
 }
