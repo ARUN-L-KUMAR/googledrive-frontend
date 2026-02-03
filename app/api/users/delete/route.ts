@@ -45,8 +45,9 @@ export async function DELETE(request: NextRequest) {
         // Delete user account
         await User.findByIdAndDelete(user._id);
 
-        // Clear session cookie
+        // Clear session cookies
         const cookieStore = await cookies();
+        cookieStore.delete('auth_token');
         cookieStore.delete('token');
 
         return NextResponse.json({ message: 'Account deleted successfully' });

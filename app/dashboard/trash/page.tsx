@@ -139,18 +139,24 @@ export default function TrashPage() {
                               Delete Forever
                             </Button>
                           </AlertDialogTrigger>
-                          <AlertDialogContent>
-                            <AlertDialogHeader>
+                          <AlertDialogContent className="w-full max-w-md overflow-hidden">
+                            <AlertDialogHeader className="min-w-0 overflow-hidden">
                               <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
-                              <AlertDialogDescription className="min-w-0">
-                                This action cannot be undone. This will permanently delete
-                                <span
-                                  className="font-semibold text-gray-900 block max-w-full truncate whitespace-nowrap overflow-hidden text-ellipsis"
-                                  title={file.name}
-                                >
-                                  {file.name}
-                                </span>
-                                and remove it from our servers.
+                              <AlertDialogDescription asChild>
+                                <div className="text-sm text-muted-foreground space-y-3">
+                                  <p>This action cannot be undone. This will permanently delete:</p>
+                                  <div className="bg-gray-100 p-3 rounded-lg min-w-0 overflow-hidden">
+                                    <div className="flex min-w-0">
+                                      <span
+                                        className="flex-1 w-0 truncate font-semibold text-gray-900"
+                                        title={file.name}
+                                      >
+                                        {file.name}
+                                      </span>
+                                    </div>
+                                  </div>
+                                  <p>and remove it from our servers.</p>
+                                </div>
                               </AlertDialogDescription>
                             </AlertDialogHeader>
                             <AlertDialogFooter>

@@ -221,7 +221,7 @@ export default function SettingsPage() {
           title: 'Account deleted',
           description: 'Your account has been permanently deleted',
         });
-        router.push('/login');
+        window.location.href = '/';
       } else {
         throw new Error('Failed to delete account');
       }

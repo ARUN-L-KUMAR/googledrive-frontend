@@ -15,9 +15,17 @@ import BulkMoveDialog from '@/components/BulkMoveDialog';
 import BulkCopyDialog from '@/components/BulkCopyDialog';
 import BulkDeleteDialog from '@/components/BulkDeleteDialog';
 import CreateFolderFromSelectionDialog from '@/components/CreateFolderFromSelectionDialog';
-import { AlertCircle, ChevronRight, Home, List, LayoutGrid, Upload, FolderPlus, ArrowLeft } from 'lucide-react';
+import { AlertCircle, ChevronRight, Home, List, LayoutGrid, Upload, FolderPlus, ArrowLeft, AlertTriangle, Star } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { Button } from '@/components/ui/button';
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogFooter,
+  DialogDescription,
+} from '@/components/ui/dialog';
 
 interface FileItem {
   _id: string;
@@ -85,6 +93,11 @@ function DashboardContent() {
   const [bulkCopyOpen, setBulkCopyOpen] = useState(false);
   const [bulkDeleteOpen, setBulkDeleteOpen] = useState(false);
   const [createFolderFromSelectionOpen, setCreateFolderFromSelectionOpen] = useState(false);
+
+  // Single file delete confirmation dialog state
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [fileToDelete, setFileToDelete] = useState<FileItem | null>(null);
+  const [deleting, setDeleting] = useState(false);
 
   // Get folder ID from URL and fetch files
   useEffect(() => {
@@ -339,13 +352,24 @@ function DashboardContent() {
     }
   };
 
-  const handleDeleteClick = async (fileId: string) => {
-    if (!confirm('Are you sure you want to move this item to trash?')) return;
+  // Show delete confirmation dialog
+  const handleDeleteClick = (fileId: string) => {
+    const file = files.find((f) => f._id === fileId);
+    if (file) {
+      setFileToDelete(file);
+      setDeleteDialogOpen(true);
+    }
+  };
 
+  // Confirm and execute single file deletion
+  const confirmDelete = async () => {
+    if (!fileToDelete) return;
+
+    setDeleting(true);
     try {
-      const response = await fetch(`/api/files/${fileId}`, { method: 'DELETE' });
+      const response = await fetch(`/api/files/${fileToDelete._id}`, { method: 'DELETE' });
       if (response.ok) {
-        setFiles(files.filter((f) => f._id !== fileId));
+        setFiles(files.filter((f) => f._id !== fileToDelete._id));
         toast({
           title: 'Deleted',
           description: 'Item moved to trash',
@@ -357,6 +381,10 @@ function DashboardContent() {
         description: 'Failed to delete item',
         variant: 'destructive',
       });
+    } finally {
+      setDeleting(false);
+      setDeleteDialogOpen(false);
+      setFileToDelete(null);
     }
   };
 
@@ -707,6 +735,68 @@ function DashboardContent() {
             file={copyFile}
             onSuccess={fetchFiles}
           />
+
+          {/* Single File Delete Confirmation Dialog */}
+          <Dialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
+            <DialogContent className="w-full max-w-md overflow-hidden">
+              <DialogHeader className="min-w-0 overflow-hidden">
+                <DialogTitle className={`flex items-center gap-2 ${fileToDelete?.isStarred ? 'text-amber-600' : 'text-red-600'}`}>
+                  <AlertTriangle className="w-5 h-5" />
+                  {fileToDelete?.isStarred ? 'Delete Starred Item?' : 'Move to Trash?'}
+                </DialogTitle>
+                <DialogDescription asChild>
+                  <div className="text-sm text-muted-foreground space-y-3 pt-2">
+                    {/* Special warning for starred files */}
+                    {fileToDelete?.isStarred && (
+                      <div className="flex items-center gap-2 p-3 bg-amber-50 rounded-lg border border-amber-200">
+                        <Star className="w-5 h-5 fill-yellow-400 text-yellow-400 flex-shrink-0" />
+                        <span className="text-amber-800 font-medium">
+                          This item is starred!
+                        </span>
+                      </div>
+                    )}
+                    <p>You are about to move this item to trash:</p>
+                    <div className="bg-gray-100 p-3 rounded-lg min-w-0 overflow-hidden">
+                      <div className="flex min-w-0">
+                        <span
+                          className="flex-1 w-0 truncate font-semibold text-gray-900"
+                          title={fileToDelete?.name}
+                        >
+                          {fileToDelete?.name}
+                        </span>
+                      </div>
+                    </div>
+                    {fileToDelete?.isStarred ? (
+                      <p className="text-amber-700">You marked this item as important. Are you sure you want to delete it?</p>
+                    ) : (
+                      <p>You can restore it from the Trash folder later.</p>
+                    )}
+                  </div>
+                </DialogDescription>
+              </DialogHeader>
+              <DialogFooter className="gap-2 sm:gap-0">
+                <Button
+                  variant="outline"
+                  onClick={() => {
+                    setDeleteDialogOpen(false);
+                    setFileToDelete(null);
+                  }}
+                  disabled={deleting}
+                  className="bg-transparent"
+                >
+                  Cancel
+                </Button>
+                <Button
+                  variant="destructive"
+                  onClick={confirmDelete}
+                  disabled={deleting}
+                  className="bg-red-600 hover:bg-red-700 text-white"
+                >
+                  {deleting ? 'Deleting...' : 'Yes, Move to Trash'}
+                </Button>
+              </DialogFooter>
+            </DialogContent>
+          </Dialog>
         </div>
       )}
     </DashboardLayout>
