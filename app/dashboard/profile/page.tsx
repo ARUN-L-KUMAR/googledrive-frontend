@@ -175,6 +175,7 @@ export default function ProfilePage() {
                                                 src={previewUrl}
                                                 alt="Profile"
                                                 className="w-full h-full object-cover"
+                                                onError={() => setPreviewUrl(null)}
                                             />
                                         ) : (
                                             <User className="w-12 h-12 text-gray-400" />

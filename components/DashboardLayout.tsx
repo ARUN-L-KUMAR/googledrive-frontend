@@ -115,6 +115,7 @@ export default function DashboardLayout({
 
   // User profile state
   const [userProfile, setUserProfile] = useState<{ firstName: string; lastName: string; profilePicture?: string } | null>(null);
+  const [avatarError, setAvatarError] = useState(false);
 
   // Notifications state
   const [notificationsOpen, setNotificationsOpen] = useState(false);
@@ -191,6 +192,7 @@ export default function DashboardLayout({
         if (response.ok) {
           const data = await response.json();
           setUserProfile(data.user);
+          setAvatarError(false); // Reset error state when profile is fetched
         }
       } catch (err) {
         console.error('Failed to fetch user profile:', err);
@@ -648,11 +650,12 @@ export default function DashboardLayout({
               className="w-10 h-10 rounded-full overflow-hidden bg-gray-100 flex items-center justify-center border-2 border-gray-200 hover:border-blue-500 transition-colors flex-shrink-0"
               title="View Profile"
             >
-              {userProfile?.profilePicture ? (
+              {userProfile?.profilePicture && !avatarError ? (
                 <img
                   src={userProfile.profilePicture}
                   alt="Profile"
                   className="w-full h-full object-cover"
+                  onError={() => setAvatarError(true)}
                 />
               ) : (
                 <span className="text-sm font-medium text-gray-600">

@@ -16,14 +16,24 @@ export async function GET(request: NextRequest) {
     // Generate signed URL for profile picture if exists
     let profilePictureUrl = null;
     if (user.profilePicture) {
-      try {
-        // Extract S3 key from the stored URL
-        const url = new URL(user.profilePicture);
-        const s3Key = url.pathname.slice(1); // Remove leading slash
-        profilePictureUrl = await getSignedS3Url(s3Key);
-      } catch (err) {
-        console.error('Failed to generate signed URL for profile picture:', err);
-        profilePictureUrl = user.profilePicture; // Fallback to original URL
+      // Check if it's an external URL (Google, etc.) or an S3 URL
+      const isExternalUrl = user.profilePicture.startsWith('https://lh3.googleusercontent.com') ||
+        user.profilePicture.startsWith('https://googleusercontent.com') ||
+        !user.profilePicture.includes(process.env.AWS_S3_BUCKET_NAME || 'cloud-storage-bucket');
+
+      if (isExternalUrl) {
+        // Return external URLs directly (e.g., Google profile pictures)
+        profilePictureUrl = user.profilePicture;
+      } else {
+        try {
+          // Extract S3 key from the stored URL
+          const url = new URL(user.profilePicture);
+          const s3Key = url.pathname.slice(1); // Remove leading slash
+          profilePictureUrl = await getSignedS3Url(s3Key);
+        } catch (err) {
+          console.error('Failed to generate signed URL for profile picture:', err);
+          profilePictureUrl = user.profilePicture; // Fallback to original URL
+        }
       }
     }
 
