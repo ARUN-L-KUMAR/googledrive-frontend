@@ -145,7 +145,7 @@ export default function CreateFolderFromSelectionDialog({
                     </div>
 
                     <div className="bg-gray-50 rounded-lg p-3">
-                        <p className="text-sm text-gray-600 mb-2">
+                        <p className="text-sm text-muted-foreground mb-2">
                             {selectedFileIds.length} item(s) will be moved to this folder:
                         </p>
                         <div className="max-h-32 overflow-auto">
@@ -173,7 +173,7 @@ export default function CreateFolderFromSelectionDialog({
                     {/* Progress indicator */}
                     {creating && progress.total > 0 && (
                         <div>
-                            <div className="flex items-center justify-between text-sm text-gray-600 mb-2">
+                            <div className="flex items-center justify-between text-sm text-muted-foreground mb-2">
                                 <span>Moving files...</span>
                                 <span>{progress.current} / {progress.total}</span>
                             </div>

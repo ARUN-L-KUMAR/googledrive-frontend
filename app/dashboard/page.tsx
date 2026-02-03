@@ -496,7 +496,7 @@ function DashboardContent() {
         <div className="space-y-6">
           {/* Header with Breadcrumbs */}
           <div>
-            <div className="flex items-center gap-2 text-sm text-gray-600 mb-2">
+            <div className="flex items-center gap-2 text-sm text-muted-foreground mb-2">
               {/* Back Button - shows when inside a folder */}
               {currentFolderId && (
                 <button
@@ -525,10 +525,10 @@ function DashboardContent() {
                 const isLast = index === breadcrumbs.length - 1;
                 return (
                   <div key={crumb._id} className="flex items-center gap-2 min-w-0 overflow-hidden">
-                    <ChevronRight size={16} className="text-gray-400 flex-shrink-0" />
+                    <ChevronRight size={16} className="text-muted-foreground flex-shrink-0" />
                     {isLast ? (
                       <span
-                        className="text-gray-900 block max-w-[150px] truncate whitespace-nowrap overflow-hidden text-ellipsis"
+                        className="text-foreground block max-w-[150px] truncate whitespace-nowrap overflow-hidden text-ellipsis"
                         title={crumb.name}
                       >
                         {crumb.name}
@@ -549,7 +549,7 @@ function DashboardContent() {
             <div className="flex items-center justify-between">
               <div>
                 <h1
-                  className="text-3xl font-bold text-gray-900 block max-w-xl truncate whitespace-nowrap overflow-hidden text-ellipsis"
+                  className="text-3xl font-bold text-foreground block max-w-xl truncate whitespace-nowrap overflow-hidden text-ellipsis"
                   title={searchParams.get('q') ? `Search: ${searchParams.get('q')}` : (breadcrumbs.length > 0 ? breadcrumbs[breadcrumbs.length - 1].name : 'My Files')}
                 >
                   {searchParams.get('q') ? (
@@ -558,7 +558,7 @@ function DashboardContent() {
                     breadcrumbs.length > 0 ? breadcrumbs[breadcrumbs.length - 1].name : 'My Files'
                   )}
                 </h1>
-                <p className="text-gray-600 mt-2">Manage and organize your cloud storage</p>
+                <p className="text-muted-foreground mt-2">Manage and organize your cloud storage</p>
               </div>
               {/* Actions and View Toggle */}
               <div className="flex items-center gap-3">
@@ -581,7 +581,7 @@ function DashboardContent() {
                   <span className="hidden sm:inline">New Folder</span>
                 </Button>
                 {/* View Toggle Buttons */}
-                <div className="flex items-center gap-1 bg-gray-100 rounded-lg p-1">
+                <div className="flex items-center gap-1 bg-muted rounded-lg p-1">
                   <Button
                     variant={viewMode === 'list' ? 'default' : 'ghost'}
                     size="sm"
@@ -617,7 +617,7 @@ function DashboardContent() {
               <div className="inline-block animate-spin">
                 <div className="w-8 h-8 border-4 border-blue-200 border-t-blue-600 rounded-full"></div>
               </div>
-              <p className="text-gray-500 mt-4">Loading files...</p>
+              <p className="text-muted-foreground mt-4">Loading files...</p>
             </div>
           ) : (
             <FileList

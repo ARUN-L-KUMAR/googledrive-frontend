@@ -106,7 +106,7 @@ export default function RegisterPage() {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100 p-4">
-      <Card className="w-full max-w-md">
+      <Card className="w-full max-w-md bg-white">
         <div className="p-8">
           <h1 className="text-3xl font-bold text-center mb-2 text-gray-900">CloudDrive</h1>
           <p className="text-center text-gray-600 mb-8">Create your account</p>
@@ -131,10 +131,10 @@ export default function RegisterPage() {
             variant="outline"
             onClick={handleGoogleSignUp}
             disabled={googleLoading || loading}
-            className="w-full flex items-center justify-center gap-3 mb-6 py-5 border-gray-300 hover:bg-gray-50"
+            className="w-full flex items-center justify-center gap-3 mb-6 py-5 bg-white border-gray-300 hover:bg-gray-50 text-gray-700"
           >
             <GoogleIcon />
-            <span className="text-gray-700 font-medium">
+            <span className="font-medium">
               {googleLoading ? 'Redirecting...' : 'Sign up with Google'}
             </span>
           </Button>
@@ -161,6 +161,7 @@ export default function RegisterPage() {
                   required
                   placeholder="John"
                   disabled={loading || googleLoading}
+                  className="bg-white border-gray-300 text-gray-900"
                 />
               </div>
               <div>
@@ -173,6 +174,7 @@ export default function RegisterPage() {
                   required
                   placeholder="Doe"
                   disabled={loading || googleLoading}
+                  className="bg-white border-gray-300 text-gray-900"
                 />
               </div>
             </div>
@@ -187,6 +189,7 @@ export default function RegisterPage() {
                 required
                 placeholder="you@example.com"
                 disabled={loading || googleLoading}
+                className="bg-white border-gray-300 text-gray-900"
               />
             </div>
 
@@ -200,6 +203,7 @@ export default function RegisterPage() {
                 required
                 placeholder="••••••••"
                 disabled={loading || googleLoading}
+                className="bg-white border-gray-300 text-gray-900"
               />
             </div>
 
@@ -213,6 +217,7 @@ export default function RegisterPage() {
                 required
                 placeholder="••••••••"
                 disabled={loading || googleLoading}
+                className="bg-white border-gray-300 text-gray-900"
               />
             </div>
 

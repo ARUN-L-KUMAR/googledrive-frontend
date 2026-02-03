@@ -30,6 +30,7 @@ import {
   HardDrive,
   Link as LinkIcon,
 } from 'lucide-react';
+import { ThemeToggle } from '@/components/ThemeToggle';
 import { Button } from '@/components/ui/button';
 import {
   Dialog,
@@ -368,7 +369,7 @@ export default function DashboardLayout({
   const currentFilter = TYPE_FILTERS.find(f => f.value === activeFilterValue) || TYPE_FILTERS[0];
 
   return (
-    <div className="flex h-screen bg-gray-50">
+    <div className="flex h-screen bg-background">
       <Suspense fallback={null}>
         <SearchHandler
           onSearchQueryChange={setSearchQuery}
@@ -382,12 +383,12 @@ export default function DashboardLayout({
       {/* Sidebar */}
       <aside
         className={`${sidebarOpen ? 'w-64' : 'w-0'
-          } bg-white border-r border-gray-200 transition-all duration-300 overflow-hidden flex flex-col`}
+          } bg-card border-r border-border transition-all duration-300 overflow-hidden flex flex-col`}
       >
-        <div className="p-6 border-b border-gray-200">
+        <div className="p-6 border-b border-border">
           <div className="flex items-center gap-2">
             <Cloud className="w-8 h-8 text-blue-600" />
-            <h1 className="text-2xl font-bold text-gray-900">CloudDrive</h1>
+            <h1 className="text-2xl font-bold text-foreground">CloudDrive</h1>
           </div>
         </div>
 
@@ -400,8 +401,8 @@ export default function DashboardLayout({
                 key={item.id}
                 href={item.href}
                 className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-colors ${isActive
-                  ? 'bg-blue-50 text-blue-600 font-medium'
-                  : 'text-gray-700 hover:bg-gray-100'
+                  ? 'bg-blue-50 dark:bg-blue-950 text-blue-600 font-medium'
+                  : 'text-muted-foreground hover:bg-accent'
                   }`}
               >
                 <Icon size={20} />
@@ -411,7 +412,7 @@ export default function DashboardLayout({
           })}
         </nav>
 
-        <div className="p-4 border-t border-gray-200 space-y-3">
+        <div className="p-4 border-t border-border space-y-3">
           <Button
             onClick={handleLogout}
             variant="ghost"
@@ -426,19 +427,19 @@ export default function DashboardLayout({
       {/* Main Content */}
       <main className="flex-1 flex flex-col overflow-hidden">
         {/* Top Bar */}
-        <header className="w-full bg-white border-b border-gray-200 px-6 py-4 flex items-center">
+        <header className="w-full bg-card border-b border-border px-6 py-4 flex items-center">
           {/* LEFT: Menu toggle + Logo */}
           <div className="flex items-center gap-3 flex-shrink-0">
             <button
               onClick={() => setSidebarOpen(!sidebarOpen)}
-              className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+              className="p-2 hover:bg-accent rounded-lg transition-colors"
             >
-              {sidebarOpen ? <X size={24} /> : <Menu size={24} />}
+              {sidebarOpen ? <X size={24} className="text-foreground" /> : <Menu size={24} className="text-foreground" />}
             </button>
             {!sidebarOpen && (
               <div className="flex items-center gap-2">
                 <Cloud className="w-7 h-7 text-blue-600" />
-                <span className="text-xl font-bold text-gray-900 hidden md:inline">CloudDrive</span>
+                <span className="text-xl font-bold text-foreground hidden md:inline">CloudDrive</span>
               </div>
             )}
           </div>
@@ -534,16 +535,16 @@ export default function DashboardLayout({
 
             {/* Search Results Dropdown */}
             {searchOpen && searchResults.length > 0 && (
-              <div className="absolute top-full left-4 right-4 mt-2 bg-white border border-gray-200 rounded-lg shadow-lg max-h-80 overflow-auto z-50">
+              <div className="absolute top-full left-4 right-4 mt-2 bg-popover border border-border rounded-lg shadow-lg max-h-80 overflow-auto z-50">
                 {searchResults.map((result) => (
                   <button
                     key={result._id}
                     onClick={() => handleSearchResultClick(result)}
-                    className="w-full flex items-center gap-3 px-4 py-3 hover:bg-gray-50 transition-colors text-left min-w-0 overflow-hidden"
+                    className="w-full flex items-center gap-3 px-4 py-3 hover:bg-accent transition-colors text-left min-w-0 overflow-hidden"
                   >
                     {getResultIcon(result)}
                     <span
-                      className="text-gray-900 block max-w-full truncate whitespace-nowrap overflow-hidden text-ellipsis"
+                      className="text-foreground block max-w-full truncate whitespace-nowrap overflow-hidden text-ellipsis"
                       title={result.name}
                     >
                       {result.name}
@@ -554,24 +555,25 @@ export default function DashboardLayout({
             )}
 
             {searchOpen && searchQuery.length >= 2 && searchResults.length === 0 && !searching && (
-              <div className="absolute top-full left-4 right-4 mt-2 bg-white border border-gray-200 rounded-lg shadow-lg p-4 text-center text-gray-500 z-50">
+              <div className="absolute top-full left-4 right-4 mt-2 bg-popover border border-border rounded-lg shadow-lg p-4 text-center text-muted-foreground z-50">
                 No results found for "{searchQuery}"
               </div>
             )}
           </div>
 
-          {/* RIGHT: Notifications, Profile */}
+          {/* RIGHT: Theme Toggle, Notifications, Profile */}
           <div className="flex items-center gap-3 flex-shrink-0">
-            {/* Filter removed from here */}
+            {/* Theme Toggle */}
+            <ThemeToggle />
 
             {/* Notifications Bell */}
             <div ref={notificationRef} className="relative">
               <button
                 onClick={() => setNotificationsOpen(!notificationsOpen)}
-                className="p-2 hover:bg-gray-100 rounded-lg transition-colors relative"
+                className="p-2 hover:bg-accent rounded-lg transition-colors relative"
                 title="Notifications"
               >
-                <Bell size={22} className="text-gray-600" />
+                <Bell size={22} className="text-muted-foreground" />
                 {unreadCount > 0 && (
                   <span className="absolute top-1 right-1 w-4 h-4 bg-red-500 text-white text-[10px] font-bold rounded-full flex items-center justify-center">
                     {unreadCount}
@@ -581,9 +583,9 @@ export default function DashboardLayout({
 
               {/* Notifications Dropdown */}
               {notificationsOpen && (
-                <div className="absolute top-full right-0 mt-2 w-80 bg-white border border-gray-200 rounded-lg shadow-lg z-50">
-                  <div className="p-3 border-b border-gray-100 flex items-center justify-between">
-                    <h3 className="font-semibold text-gray-900">Notifications</h3>
+                <div className="absolute top-full right-0 mt-2 w-80 bg-popover border border-border rounded-lg shadow-lg z-50">
+                  <div className="p-3 border-b border-border flex items-center justify-between">
+                    <h3 className="font-semibold text-foreground">Notifications</h3>
                     {unreadCount > 0 && (
                       <span
                         onClick={markAllAsRead}
@@ -595,7 +597,7 @@ export default function DashboardLayout({
                   </div>
                   <div className="max-h-80 overflow-auto">
                     {notifications.length === 0 ? (
-                      <div className="p-4 text-center text-gray-500 text-sm">
+                      <div className="p-4 text-center text-muted-foreground text-sm">
                         No notifications
                       </div>
                     ) : (
@@ -603,9 +605,9 @@ export default function DashboardLayout({
                         <div
                           key={notif._id}
                           onClick={() => markAsRead(notif._id, notif.relatedId?.toString())}
-                          className={`p-3 border-b border-gray-50 hover:bg-gray-50 cursor-pointer flex gap-3 ${!notif.read ? 'bg-blue-50/50' : ''}`}
+                          className={`p-3 border-b border-border hover:bg-accent cursor-pointer flex gap-3 ${!notif.read ? 'bg-blue-50 dark:bg-blue-950/30' : ''}`}
                         >
-                          <div className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 ${!notif.read ? 'bg-blue-100' : 'bg-gray-100'}`}>
+                          <div className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 ${!notif.read ? 'bg-blue-100 dark:bg-blue-900' : 'bg-muted'}`}>
                             {/* Simple icon logic based on type/title for now */}
                             {notif.title.includes('Storage') ? (
                               <HardDrive size={16} className={!notif.read ? 'text-blue-600' : 'text-gray-500'} />
@@ -618,9 +620,9 @@ export default function DashboardLayout({
                             )}
                           </div>
                           <div className="flex-1 min-w-0">
-                            <p className="text-sm font-medium text-gray-900">{notif.title}</p>
-                            <p className="text-xs text-gray-500 truncate">{notif.message}</p>
-                            <p className="text-xs text-gray-400 mt-1">
+                            <p className="text-sm font-medium text-foreground">{notif.title}</p>
+                            <p className="text-xs text-muted-foreground truncate">{notif.message}</p>
+                            <p className="text-xs text-muted-foreground/70 mt-1">
                               {new Date(notif.createdAt).toLocaleDateString()}
                             </p>
                           </div>
@@ -629,7 +631,7 @@ export default function DashboardLayout({
                       ))
                     )}
                   </div>
-                  <div className="p-2 border-t border-gray-100 text-center">
+                  <div className="p-2 border-t border-border text-center">
                     <span
                       onClick={() => {
                         setNotificationsOpen(false);
@@ -647,7 +649,7 @@ export default function DashboardLayout({
             {/* Profile Avatar */}
             <button
               onClick={() => router.push('/dashboard/profile')}
-              className="w-10 h-10 rounded-full overflow-hidden bg-gray-100 flex items-center justify-center border-2 border-gray-200 hover:border-blue-500 transition-colors flex-shrink-0"
+              className="w-10 h-10 rounded-full overflow-hidden bg-muted flex items-center justify-center border-2 border-border hover:border-blue-500 transition-colors flex-shrink-0"
               title="View Profile"
             >
               {userProfile?.profilePicture && !avatarError ? (
@@ -658,7 +660,7 @@ export default function DashboardLayout({
                   onError={() => setAvatarError(true)}
                 />
               ) : (
-                <span className="text-sm font-medium text-gray-600">
+                <span className="text-sm font-medium text-muted-foreground">
                   {userProfile?.firstName?.[0]?.toUpperCase() || ''}
                   {userProfile?.lastName?.[0]?.toUpperCase() || ''}
                 </span>

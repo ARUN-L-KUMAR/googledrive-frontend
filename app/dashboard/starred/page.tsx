@@ -140,11 +140,11 @@ export default function StarredPage() {
       <div className="space-y-6">
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-3xl font-bold text-gray-900">Starred Files</h1>
-            <p className="text-gray-600 mt-2">Your favorite files and folders</p>
+            <h1 className="text-3xl font-bold text-foreground">Starred Files</h1>
+            <p className="text-muted-foreground mt-2">Your favorite files and folders</p>
           </div>
           {/* View Toggle Buttons */}
-          <div className="flex items-center gap-1 bg-gray-100 rounded-lg p-1">
+          <div className="flex items-center gap-1 bg-muted rounded-lg p-1">
             <Button
               variant={viewMode === 'list' ? 'default' : 'ghost'}
               size="sm"
@@ -196,7 +196,7 @@ export default function StarredPage() {
                 </span>
               </div>
               <p>
-                You are about to move <strong className="text-gray-900">{fileToDelete?.name}</strong> to trash.
+                You are about to move <strong className="text-foreground">{fileToDelete?.name}</strong> to trash.
               </p>
               <p className="mt-2 text-sm">
                 You marked this file as important. Are you sure you want to delete it?

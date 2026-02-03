@@ -77,8 +77,8 @@ export default function TrashPage() {
     <DashboardLayout currentPage="trash">
       <div className="space-y-6">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">Trash</h1>
-          <p className="text-gray-600 mt-2">Deleted items are permanently removed after 30 days</p>
+          <h1 className="text-3xl font-bold text-foreground">Trash</h1>
+          <p className="text-muted-foreground mt-2">Deleted items are permanently removed after 30 days</p>
         </div>
 
         {loading ? (
@@ -89,31 +89,31 @@ export default function TrashPage() {
           </div>
         ) : files.length === 0 ? (
           <div className="text-center py-16">
-            <Trash2 className="w-16 h-16 text-gray-300 mx-auto mb-4" />
-            <p className="text-gray-500 text-lg">Your trash is empty</p>
+            <Trash2 className="w-16 h-16 text-muted-foreground/50 mx-auto mb-4" />
+            <p className="text-muted-foreground text-lg">Your trash is empty</p>
           </div>
         ) : (
-          <div className="bg-white rounded-lg border border-gray-200 overflow-hidden">
+          <div className="bg-card rounded-lg border border-border overflow-hidden">
             <table className="w-full">
               <thead>
-                <tr className="border-b border-gray-200 bg-gray-50">
-                  <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700">Name</th>
-                  <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700">Deleted</th>
-                  <th className="px-6 py-3 text-right text-sm font-semibold text-gray-700">Actions</th>
+                <tr className="border-b border-border bg-muted">
+                  <th className="px-6 py-3 text-left text-sm font-semibold text-foreground">Name</th>
+                  <th className="px-6 py-3 text-left text-sm font-semibold text-foreground">Deleted</th>
+                  <th className="px-6 py-3 text-right text-sm font-semibold text-foreground">Actions</th>
                 </tr>
               </thead>
               <tbody>
                 {files.map((file) => (
-                  <tr key={file._id} className="border-b border-gray-200 hover:bg-gray-50">
+                  <tr key={file._id} className="border-b border-border hover:bg-muted/50">
                     <td className="px-6 py-4 max-w-[250px]">
                       <span
-                        className="block max-w-full truncate whitespace-nowrap overflow-hidden text-ellipsis text-gray-900"
+                        className="block max-w-full truncate whitespace-nowrap overflow-hidden text-ellipsis text-foreground"
                         title={file.name}
                       >
                         {file.name}
                       </span>
                     </td>
-                    <td className="px-6 py-4 text-sm text-gray-600">
+                    <td className="px-6 py-4 text-sm text-muted-foreground">
                       {new Date(file.trashedAt).toLocaleDateString()}
                     </td>
                     <td className="px-6 py-4 text-right">
@@ -145,10 +145,10 @@ export default function TrashPage() {
                               <AlertDialogDescription asChild>
                                 <div className="text-sm text-muted-foreground space-y-3">
                                   <p>This action cannot be undone. This will permanently delete:</p>
-                                  <div className="bg-gray-100 p-3 rounded-lg min-w-0 overflow-hidden">
+                                  <div className="bg-muted p-3 rounded-lg min-w-0 overflow-hidden">
                                     <div className="flex min-w-0">
                                       <span
-                                        className="flex-1 w-0 truncate font-semibold text-gray-900"
+                                        className="flex-1 w-0 truncate font-semibold text-foreground"
                                         title={file.name}
                                       >
                                         {file.name}

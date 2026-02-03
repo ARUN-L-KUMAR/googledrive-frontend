@@ -59,9 +59,6 @@ export default function Home() {
               Start Free <ChevronRight size={20} />
             </Button>
           </Link>
-          <Button variant="outline" className="px-8 py-6 text-lg rounded-lg bg-transparent">
-            Learn More
-          </Button>
         </div>
       </section>
 

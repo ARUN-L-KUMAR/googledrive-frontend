@@ -152,8 +152,8 @@ export default function ProfilePage() {
         <DashboardLayout currentPage="profile">
             <div className="space-y-6 max-w-2xl mx-auto">
                 <div>
-                    <h1 className="text-3xl font-bold text-gray-900">Profile</h1>
-                    <p className="text-gray-600 mt-2">Manage your personal information</p>
+                    <h1 className="text-3xl font-bold text-foreground">Profile</h1>
+                    <p className="text-muted-foreground mt-2">Manage your personal information</p>
                 </div>
 
                 {loading ? (
@@ -166,10 +166,10 @@ export default function ProfilePage() {
                     <div className="space-y-6">
                         {/* Profile Picture Section */}
                         <Card className="p-6 shadow-md rounded-xl">
-                            <h2 className="text-xl font-semibold text-gray-900 mb-4">Profile Picture</h2>
+                            <h2 className="text-xl font-semibold text-foreground mb-4">Profile Picture</h2>
                             <div className="flex items-center gap-6">
                                 <div className="relative">
-                                    <div className="w-24 h-24 rounded-full overflow-hidden bg-gray-100 flex items-center justify-center border-4 border-white shadow-lg">
+                                    <div className="w-24 h-24 rounded-full overflow-hidden bg-muted flex items-center justify-center border-4 border-card shadow-lg">
                                         {previewUrl ? (
                                             <img
                                                 src={previewUrl}
@@ -204,18 +204,18 @@ export default function ProfilePage() {
                                         <Camera size={16} />
                                         Change Photo
                                     </Button>
-                                    <p className="text-sm text-gray-500 mt-2">JPG, PNG or GIF. Max 5MB.</p>
+                                    <p className="text-sm text-muted-foreground mt-2">JPG, PNG or GIF. Max 5MB.</p>
                                 </div>
                             </div>
                         </Card>
 
                         {/* Personal Information Section */}
                         <Card className="p-6 shadow-md rounded-xl">
-                            <h2 className="text-xl font-semibold text-gray-900 mb-4">Personal Information</h2>
+                            <h2 className="text-xl font-semibold text-foreground mb-4">Personal Information</h2>
                             <div className="space-y-4">
                                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                     <div>
-                                        <label className="block text-sm font-medium text-gray-700 mb-1">
+                                        <label className="block text-sm font-medium text-muted-foreground mb-1">
                                             First Name
                                         </label>
                                         <Input
@@ -225,7 +225,7 @@ export default function ProfilePage() {
                                         />
                                     </div>
                                     <div>
-                                        <label className="block text-sm font-medium text-gray-700 mb-1">
+                                        <label className="block text-sm font-medium text-muted-foreground mb-1">
                                             Last Name
                                         </label>
                                         <Input
@@ -236,16 +236,16 @@ export default function ProfilePage() {
                                     </div>
                                 </div>
                                 <div>
-                                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                                    <label className="block text-sm font-medium text-muted-foreground mb-1">
                                         <Mail className="inline w-4 h-4 mr-1" />
                                         Email
                                     </label>
                                     <Input
                                         value={profile?.email || ''}
                                         disabled
-                                        className="bg-gray-50 text-gray-500"
+                                        className="bg-muted text-muted-foreground"
                                     />
-                                    <p className="text-xs text-gray-500 mt-1">Email cannot be changed</p>
+                                    <p className="text-xs text-muted-foreground mt-1">Email cannot be changed</p>
                                 </div>
                                 <Button
                                     onClick={handleSave}
@@ -266,37 +266,37 @@ export default function ProfilePage() {
 
                         {/* Account Info Section */}
                         <Card className="p-6 shadow-md rounded-xl">
-                            <h2 className="text-xl font-semibold text-gray-900 mb-4">Account Information</h2>
+                            <h2 className="text-xl font-semibold text-foreground mb-4">Account Information</h2>
                             <div className="space-y-4">
-                                <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg">
-                                    <Calendar className="w-5 h-5 text-gray-500" />
+                                <div className="flex items-center gap-3 p-3 bg-muted rounded-lg">
+                                    <Calendar className="w-5 h-5 text-muted-foreground" />
                                     <div>
-                                        <p className="text-sm text-gray-500">Member since</p>
-                                        <p className="font-medium text-gray-900">
+                                        <p className="text-sm text-muted-foreground">Member since</p>
+                                        <p className="font-medium text-foreground">
                                             {profile?.createdAt ? formatDate(profile.createdAt) : '-'}
                                         </p>
                                     </div>
                                 </div>
-                                <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg">
-                                    <HardDrive className="w-5 h-5 text-gray-500" />
+                                <div className="flex items-center gap-3 p-3 bg-muted rounded-lg">
+                                    <HardDrive className="w-5 h-5 text-muted-foreground" />
                                     <div>
-                                        <p className="text-sm text-gray-500">Storage Plan</p>
-                                        <p className="font-medium text-gray-900">
+                                        <p className="text-sm text-muted-foreground">Storage Plan</p>
+                                        <p className="font-medium text-foreground">
                                             {profile?.storageLimit && profile.storageLimit >= 5 * 1024 * 1024 * 1024
                                                 ? 'Free (5GB)'
                                                 : 'Pro'}
                                         </p>
                                     </div>
                                 </div>
-                                <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg">
+                                <div className="flex items-center gap-3 p-3 bg-muted rounded-lg">
                                     <HardDrive className="w-5 h-5 text-blue-500" />
                                     <div className="flex-1">
-                                        <p className="text-sm text-gray-500">Storage Used</p>
-                                        <p className="font-medium text-gray-900">
+                                        <p className="text-sm text-muted-foreground">Storage Used</p>
+                                        <p className="font-medium text-foreground">
                                             {profile ? `${formatBytes(profile.storageUsed)} of ${formatBytes(profile.storageLimit)}` : '-'}
                                         </p>
                                         {profile && (
-                                            <div className="w-full bg-gray-200 rounded-full h-2 mt-2">
+                                            <div className="w-full bg-muted-foreground/20 rounded-full h-2 mt-2">
                                                 <div
                                                     className="bg-blue-600 h-2 rounded-full transition-all"
                                                     style={{

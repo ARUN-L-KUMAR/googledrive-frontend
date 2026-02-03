@@ -198,7 +198,7 @@ export default function BulkCopyDialog({ isOpen, onClose, fileIds, fileNames, on
                                 >
                                     <Folder size={20} className="text-blue-500 flex-shrink-0" />
                                     <span
-                                        className="block max-w-full truncate whitespace-nowrap overflow-hidden text-ellipsis text-gray-900"
+                                        className="block max-w-full truncate whitespace-nowrap overflow-hidden text-ellipsis text-foreground"
                                         title={folder.name}
                                     >
                                         {folder.name}
@@ -211,7 +211,7 @@ export default function BulkCopyDialog({ isOpen, onClose, fileIds, fileNames, on
                     {/* Progress indicator */}
                     {copying && (
                         <div className="mt-4">
-                            <div className="flex items-center justify-between text-sm text-gray-600 mb-2">
+                            <div className="flex items-center justify-between text-sm text-muted-foreground mb-2">
                                 <span>Copying files...</span>
                                 <span>{progress.current} / {progress.total}</span>
                             </div>

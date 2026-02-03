@@ -46,7 +46,7 @@ export default function ForgotPasswordPage() {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100 p-4">
-      <Card className="w-full max-w-md">
+      <Card className="w-full max-w-md bg-white">
         <div className="p-8">
           <h1 className="text-3xl font-bold text-center mb-2 text-gray-900">CloudDrive</h1>
           <p className="text-center text-gray-600 mb-8">Reset your password</p>
@@ -75,6 +75,7 @@ export default function ForgotPasswordPage() {
                 required
                 placeholder="you@example.com"
                 disabled={loading}
+                className="bg-white border-gray-300 text-gray-900"
               />
               <p className="text-sm text-gray-600 mt-2">
                 Enter the email associated with your account and we'll send you a link to reset your password.
