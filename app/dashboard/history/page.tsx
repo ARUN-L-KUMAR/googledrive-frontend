@@ -326,11 +326,11 @@ export default function HistoryPage() {
 
     return (
         <DashboardLayout currentPage="history">
-            <div className="space-y-6 max-w-4xl mx-auto">
+            <div className="space-y-4 sm:space-y-6 max-w-4xl mx-auto">
                 {/* Header */}
                 <div>
-                    <h1 className="text-3xl font-bold text-foreground">Activity History</h1>
-                    <p className="text-muted-foreground mt-2">Track all your file and account activities</p>
+                    <h1 className="text-2xl sm:text-3xl font-bold text-foreground">Activity History</h1>
+                    <p className="text-muted-foreground mt-1 sm:mt-2 text-sm sm:text-base">Track all your file and account activities</p>
                 </div>
 
                 {/* Filter */}

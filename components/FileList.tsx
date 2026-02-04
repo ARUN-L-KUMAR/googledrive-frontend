@@ -636,95 +636,98 @@ export default function FileList({
         />
       )}
 
-      <table className="w-full">
-        <thead>
-          <tr className="border-b border-border bg-muted">
-            <th className="px-3 py-3 text-left w-10">
-              <Checkbox
-                checked={selectedFiles.size === files.length && files.length > 0}
-                onCheckedChange={(checked) => {
-                  if (checked) {
-                    const allIds = new Set(files.map(f => f._id));
-                    onSelectionChange?.(allIds, files);
-                  } else {
-                    onSelectionChange?.(new Set(), []);
-                  }
-                }}
-                className="data-[state=checked]:bg-blue-600"
-              />
-            </th>
-            <th className="px-6 py-3 text-left text-sm font-semibold text-foreground">Name</th>
-            <th className="px-6 py-3 text-left text-sm font-semibold text-foreground">Size</th>
-            <th className="px-6 py-3 text-left text-sm font-semibold text-foreground">Modified</th>
-            <th className="px-6 py-3 text-right text-sm font-semibold text-foreground">Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          {files.map((file, index) => {
-            const isSelected = selectedFiles.has(file._id);
-            return (
-              <tr
-                key={file._id}
-                ref={(el) => setItemRef(file._id, el)}
-                className={`border-b border-border transition-colors cursor-pointer
+      {/* Scrollable table wrapper for mobile */}
+      <div className="overflow-x-auto">
+        <table className="w-full min-w-[500px]">
+          <thead>
+            <tr className="border-b border-border bg-muted">
+              <th className="px-2 md:px-3 py-3 text-left w-10">
+                <Checkbox
+                  checked={selectedFiles.size === files.length && files.length > 0}
+                  onCheckedChange={(checked) => {
+                    if (checked) {
+                      const allIds = new Set(files.map(f => f._id));
+                      onSelectionChange?.(allIds, files);
+                    } else {
+                      onSelectionChange?.(new Set(), []);
+                    }
+                  }}
+                  className="data-[state=checked]:bg-blue-600"
+                />
+              </th>
+              <th className="px-3 md:px-6 py-3 text-left text-sm font-semibold text-foreground">Name</th>
+              <th className="px-3 md:px-6 py-3 text-left text-sm font-semibold text-foreground hidden sm:table-cell">Size</th>
+              <th className="px-3 md:px-6 py-3 text-left text-sm font-semibold text-foreground hidden md:table-cell">Modified</th>
+              <th className="px-3 md:px-6 py-3 text-right text-sm font-semibold text-foreground">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {files.map((file, index) => {
+              const isSelected = selectedFiles.has(file._id);
+              return (
+                <tr
+                  key={file._id}
+                  ref={(el) => setItemRef(file._id, el)}
+                  className={`border-b border-border transition-colors cursor-pointer
                   ${isSelected ? 'bg-blue-500/10' : 'hover:bg-muted/50'}
                   ${dragOverFolder === file._id ? 'bg-blue-50 dark:bg-blue-950 border-blue-300' : ''}
                   ${draggedFile === file._id ? 'opacity-50' : ''}`}
-                onClick={(e) => handleRowClick(e, file, index)}
-                draggable={file.type === 'file'}
-                onDragStart={(e) => handleDragStart(e, file._id)}
-                onDragEnd={handleDragEnd}
-                onDragOver={(e) => handleDragOver(e, file)}
-                onDragLeave={handleDragLeave}
-                onDrop={(e) => handleDrop(e, file)}
-              >
-                <td className="px-3 py-4" onClick={(e) => e.stopPropagation()}>
-                  <Checkbox
-                    checked={isSelected}
-                    onCheckedChange={(checked) => {
-                      const newSelected = new Set(selectedFiles);
-                      if (checked) {
-                        newSelected.add(file._id);
-                      } else {
-                        newSelected.delete(file._id);
-                      }
-                      const selectedFileItems = files.filter(f => newSelected.has(f._id));
-                      setLastSelectedIndex(index);
-                      onSelectionChange?.(newSelected, selectedFileItems);
-                    }}
-                    className="data-[state=checked]:bg-blue-600"
-                  />
-                </td>
-                <td className="px-6 py-4 max-w-[250px]">
-                  <div className="flex items-center gap-3 min-w-0">
-                    {file.type === 'folder' ? (
-                      <Folder className={`w-5 h-5 flex-shrink-0 ${dragOverFolder === file._id ? 'text-blue-600' : 'text-blue-500'}`} />
-                    ) : (
-                      getFileIcon(file.mimeType)
-                    )}
-                    <span
-                      className="block max-w-full truncate whitespace-nowrap overflow-hidden text-ellipsis text-foreground font-medium"
-                      title={file.name}
-                    >
-                      {file.name}
-                    </span>
-                    {file.isStarred && (
-                      <Star size={14} className="fill-yellow-400 text-yellow-400 flex-shrink-0" />
-                    )}
-                  </div>
-                </td>
-                <td className="px-6 py-4 text-sm text-muted-foreground">
-                  {file.type === 'folder' ? '—' : formatFileSize(file.size || 0)}
-                </td>
-                <td className="px-6 py-4 text-sm text-muted-foreground">{formatDate(file.updatedAt)}</td>
-                <td className="px-6 py-4 text-right" onClick={(e) => e.stopPropagation()}>
-                  {renderActionsMenu(file)}
-                </td>
-              </tr>
-            );
-          })}
-        </tbody>
-      </table>
+                  onClick={(e) => handleRowClick(e, file, index)}
+                  draggable={file.type === 'file'}
+                  onDragStart={(e) => handleDragStart(e, file._id)}
+                  onDragEnd={handleDragEnd}
+                  onDragOver={(e) => handleDragOver(e, file)}
+                  onDragLeave={handleDragLeave}
+                  onDrop={(e) => handleDrop(e, file)}
+                >
+                  <td className="px-2 md:px-3 py-3 md:py-4" onClick={(e) => e.stopPropagation()}>
+                    <Checkbox
+                      checked={isSelected}
+                      onCheckedChange={(checked) => {
+                        const newSelected = new Set(selectedFiles);
+                        if (checked) {
+                          newSelected.add(file._id);
+                        } else {
+                          newSelected.delete(file._id);
+                        }
+                        const selectedFileItems = files.filter(f => newSelected.has(f._id));
+                        setLastSelectedIndex(index);
+                        onSelectionChange?.(newSelected, selectedFileItems);
+                      }}
+                      className="data-[state=checked]:bg-blue-600"
+                    />
+                  </td>
+                  <td className="px-3 md:px-6 py-3 md:py-4 max-w-[120px] sm:max-w-[200px] md:max-w-[250px]">
+                    <div className="flex items-center gap-3 min-w-0">
+                      {file.type === 'folder' ? (
+                        <Folder className={`w-5 h-5 flex-shrink-0 ${dragOverFolder === file._id ? 'text-blue-600' : 'text-blue-500'}`} />
+                      ) : (
+                        getFileIcon(file.mimeType)
+                      )}
+                      <span
+                        className="block max-w-full truncate whitespace-nowrap overflow-hidden text-ellipsis text-foreground font-medium"
+                        title={file.name}
+                      >
+                        {file.name}
+                      </span>
+                      {file.isStarred && (
+                        <Star size={14} className="fill-yellow-400 text-yellow-400 flex-shrink-0" />
+                      )}
+                    </div>
+                  </td>
+                  <td className="px-3 md:px-6 py-3 md:py-4 text-sm text-muted-foreground hidden sm:table-cell">
+                    {file.type === 'folder' ? '—' : formatFileSize(file.size || 0)}
+                  </td>
+                  <td className="px-3 md:px-6 py-3 md:py-4 text-sm text-muted-foreground hidden md:table-cell">{formatDate(file.updatedAt)}</td>
+                  <td className="px-3 md:px-6 py-3 md:py-4 text-right" onClick={(e) => e.stopPropagation()}>
+                    {renderActionsMenu(file)}
+                  </td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 }

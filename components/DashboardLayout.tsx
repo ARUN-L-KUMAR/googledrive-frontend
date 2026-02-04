@@ -97,7 +97,9 @@ export default function DashboardLayout({
   onHomeFilterChange
 }: DashboardLayoutProps) {
   const router = useRouter();
-  const [sidebarOpen, setSidebarOpen] = useState(true);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+  const [mobileSearchOpen, setMobileSearchOpen] = useState(false);
   const [uploadOpen, setUploadOpen] = useState(false);
   const [folderDialogOpen, setFolderDialogOpen] = useState(false);
   const [newFolderName, setNewFolderName] = useState('');
@@ -202,6 +204,30 @@ export default function DashboardLayout({
     };
     fetchProfile();
   }, []);
+
+  // Detect mobile viewport and manage sidebar state
+  useEffect(() => {
+    const checkMobile = () => {
+      const mobile = window.innerWidth < 768;
+      setIsMobile(mobile);
+      // On desktop, default to sidebar open
+      if (!mobile) {
+        setSidebarOpen(true);
+      }
+    };
+
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
+
+  // Close sidebar when navigating on mobile
+  useEffect(() => {
+    if (isMobile) {
+      setSidebarOpen(false);
+      setMobileSearchOpen(false);
+    }
+  }, [currentPage, currentFolderId]);
 
   // Search handler component handles search params
 
@@ -382,10 +408,22 @@ export default function DashboardLayout({
           setSearchOpen={setSearchOpen}
         />
       </Suspense>
+
+      {/* Mobile Sidebar Backdrop */}
+      {isMobile && sidebarOpen && (
+        <div
+          className="fixed inset-0 bg-black/50 z-40 md:hidden"
+          onClick={() => setSidebarOpen(false)}
+        />
+      )}
+
       {/* Sidebar */}
       <aside
-        className={`${sidebarOpen ? 'w-64' : 'w-0'
-          } bg-card border-r border-border transition-all duration-300 overflow-hidden flex flex-col`}
+        className={`
+          ${isMobile
+            ? `fixed inset-y-0 left-0 z-50 w-64 transform transition-transform duration-300 ease-in-out ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'}`
+            : `${sidebarOpen ? 'w-64' : 'w-0'} transition-all duration-300 overflow-hidden`
+          } bg-card border-r border-border flex flex-col`}
       >
         <div className="p-6 border-b border-border">
           <div className="flex items-center gap-2">
@@ -429,142 +467,163 @@ export default function DashboardLayout({
       {/* Main Content */}
       <main className="flex-1 flex flex-col overflow-hidden">
         {/* Top Bar */}
-        <header className="w-full bg-card border-b border-border px-6 py-4 flex items-center">
+        <header className="w-full bg-card border-b border-border px-3 py-3 md:px-6 md:py-4 flex items-center">
           {/* LEFT: Menu toggle + Logo */}
-          <div className="flex items-center gap-3 flex-shrink-0">
+          <div className="flex items-center gap-2 md:gap-3 flex-shrink-0">
             <button
               onClick={() => setSidebarOpen(!sidebarOpen)}
               className="p-2 hover:bg-accent rounded-lg transition-colors"
             >
-              {sidebarOpen ? <X size={24} className="text-foreground" /> : <Menu size={24} className="text-foreground" />}
+              {sidebarOpen && !isMobile ? <X size={24} className="text-foreground" /> : <Menu size={24} className="text-foreground" />}
             </button>
-            {!sidebarOpen && (
+            {(!sidebarOpen || isMobile) && (
               <div className="flex items-center gap-2">
-                <Cloud className="w-7 h-7 text-blue-600" />
-                <span className="text-xl font-bold text-foreground hidden md:inline">CloudDrive</span>
+                <Cloud className="w-6 h-6 md:w-7 md:h-7 text-blue-600" />
+                <span className="text-lg md:text-xl font-bold text-foreground hidden sm:inline">CloudDrive</span>
               </div>
             )}
           </div>
 
           {/* CENTER: Search Bar + Filter */}
-          <div ref={searchRef} className="relative flex-1 max-w-3xl mx-auto px-4 flex items-center gap-2">
-            <div className="relative flex-1">
-              <Search size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 z-10" />
-              <div className="w-full relative">
-                {/* Hidden fake fields to trap autofill */}
-                <input type="text" name="fake_username" className="hidden" aria-hidden="true" />
-                <input type="password" name="fake_password" className="hidden" aria-hidden="true" />
-
-                <Input
-                  type="search"
-                  name="search_query_field"
-                  id="search_query_field"
-                  placeholder="Search files and folders..."
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  onFocus={() => searchQuery.length >= 2 && setSearchOpen(true)}
-                  onKeyDown={(e) => {
-                    // Prevent form submission on Enter key
-                    if (e.key === 'Enter') {
-                      e.preventDefault();
-                      e.stopPropagation();
-
-                      // Close dropdown - results will be shown in main content area
-                      setSearchOpen(false);
-
-                      // Update URL immediately without debounce for Enter key
-                      if (searchQuery.length >= 1) {
-                        // Set navigating flag to prevent URL clearing in effect
-                        isNavigatingRef.current = true;
-
-                        const params = new URLSearchParams();
-                        params.set('q', searchQuery);
-                        if (searchType && searchType !== 'all') {
-                          params.set('type', searchType);
-                        }
-                        // Use push instead of replace to allow back navigation
-                        router.push(`/dashboard?${params.toString()}`);
-
-                        // Reset the flag after navigation completes
-                        setTimeout(() => {
-                          isNavigatingRef.current = false;
-                        }, 100);
-                      }
-                    }
-                  }}
-                  className="pl-10 pr-4 py-2 w-full"
-                  autoComplete="off"
-                  autoCorrect="off"
-                  spellCheck="false"
-                  data-lpignore="true"
-                  data-form-type="other"
-                />
-              </div>
-              {searching && (
-                <div className="absolute right-3 top-1/2 -translate-y-1/2">
-                  <div className="w-4 h-4 border-2 border-blue-200 border-t-blue-600 rounded-full animate-spin" />
-                </div>
-              )}
+          {/* Mobile: Show search toggle button; Desktop: Show full search bar */}
+          {isMobile && !mobileSearchOpen ? (
+            <div className="flex-1 flex justify-end px-2">
+              <button
+                onClick={() => setMobileSearchOpen(true)}
+                className="p-2 hover:bg-accent rounded-lg transition-colors"
+              >
+                <Search size={20} className="text-muted-foreground" />
+              </button>
             </div>
+          ) : (
+            <div ref={searchRef} className={`relative flex-1 max-w-3xl mx-auto px-2 md:px-4 flex items-center gap-2 ${isMobile && mobileSearchOpen ? 'absolute inset-x-0 top-0 bg-card p-3 z-30 border-b border-border' : ''}`}>
+              <div className="relative flex-1">
+                <Search size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 z-10" />
+                <div className="w-full relative">
+                  {/* Hidden fake fields to trap autofill */}
+                  <input type="text" name="fake_username" className="hidden" aria-hidden="true" />
+                  <input type="password" name="fake_password" className="hidden" aria-hidden="true" />
 
-            {/* Type Filter - Moved here */}
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant="outline" className="gap-2 flex-shrink-0">
-                  <Filter size={16} />
-                  <currentFilter.icon size={16} />
-                  <span className="hidden lg:inline">{currentFilter.label}</span>
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end">
-                {TYPE_FILTERS.map((filter) => (
-                  <DropdownMenuItem
-                    key={filter.value}
-                    onClick={() => {
-                      setSearchType(filter.value);
-                      if (onHomeFilterChange) {
-                        onHomeFilterChange(filter.value);
+                  <Input
+                    type="search"
+                    name="search_query_field"
+                    id="search_query_field"
+                    placeholder="Search files and folders..."
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    onFocus={() => searchQuery.length >= 2 && setSearchOpen(true)}
+                    onKeyDown={(e) => {
+                      // Prevent form submission on Enter key
+                      if (e.key === 'Enter') {
+                        e.preventDefault();
+                        e.stopPropagation();
+
+                        // Close dropdown - results will be shown in main content area
+                        setSearchOpen(false);
+
+                        // Update URL immediately without debounce for Enter key
+                        if (searchQuery.length >= 1) {
+                          // Set navigating flag to prevent URL clearing in effect
+                          isNavigatingRef.current = true;
+
+                          const params = new URLSearchParams();
+                          params.set('q', searchQuery);
+                          if (searchType && searchType !== 'all') {
+                            params.set('type', searchType);
+                          }
+                          // Use push instead of replace to allow back navigation
+                          router.push(`/dashboard?${params.toString()}`);
+
+                          // Reset the flag after navigation completes
+                          setTimeout(() => {
+                            isNavigatingRef.current = false;
+                          }, 100);
+                        }
                       }
                     }}
-                    className="gap-2"
-                  >
-                    <filter.icon size={16} />
-                    {filter.label}
-                  </DropdownMenuItem>
-                ))}
-              </DropdownMenuContent>
-            </DropdownMenu>
+                    className="pl-10 pr-4 py-2 w-full"
+                    autoComplete="off"
+                    autoCorrect="off"
+                    spellCheck="false"
+                    data-lpignore="true"
+                    data-form-type="other"
+                  />
+                </div>
+                {searching && (
+                  <div className="absolute right-3 top-1/2 -translate-y-1/2">
+                    <div className="w-4 h-4 border-2 border-blue-200 border-t-blue-600 rounded-full animate-spin" />
+                  </div>
+                )}
+              </div>
 
-            {/* Search Results Dropdown */}
-            {searchOpen && searchResults.length > 0 && (
-              <div className="absolute top-full left-4 right-4 mt-2 bg-popover border border-border rounded-lg shadow-lg max-h-80 overflow-auto z-50">
-                {searchResults.map((result) => (
-                  <button
-                    key={result._id}
-                    onClick={() => handleSearchResultClick(result)}
-                    className="w-full flex items-center gap-3 px-4 py-3 hover:bg-accent transition-colors text-left min-w-0 overflow-hidden"
-                  >
-                    {getResultIcon(result)}
-                    <span
-                      className="text-foreground block max-w-full truncate whitespace-nowrap overflow-hidden text-ellipsis"
-                      title={result.name}
+              {/* Type Filter - Moved here */}
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="outline" className="gap-2 flex-shrink-0">
+                    <Filter size={16} />
+                    <currentFilter.icon size={16} />
+                    <span className="hidden lg:inline">{currentFilter.label}</span>
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end">
+                  {TYPE_FILTERS.map((filter) => (
+                    <DropdownMenuItem
+                      key={filter.value}
+                      onClick={() => {
+                        setSearchType(filter.value);
+                        if (onHomeFilterChange) {
+                          onHomeFilterChange(filter.value);
+                        }
+                      }}
+                      className="gap-2"
                     >
-                      {result.name}
-                    </span>
-                  </button>
-                ))}
-              </div>
-            )}
+                      <filter.icon size={16} />
+                      {filter.label}
+                    </DropdownMenuItem>
+                  ))}
+                </DropdownMenuContent>
+              </DropdownMenu>
 
-            {searchOpen && searchQuery.length >= 2 && searchResults.length === 0 && !searching && (
-              <div className="absolute top-full left-4 right-4 mt-2 bg-popover border border-border rounded-lg shadow-lg p-4 text-center text-muted-foreground z-50">
-                No results found for "{searchQuery}"
-              </div>
-            )}
-          </div>
+              {/* Search Results Dropdown */}
+              {searchOpen && searchResults.length > 0 && (
+                <div className="absolute top-full left-4 right-4 mt-2 bg-popover border border-border rounded-lg shadow-lg max-h-80 overflow-auto z-50">
+                  {searchResults.map((result) => (
+                    <button
+                      key={result._id}
+                      onClick={() => handleSearchResultClick(result)}
+                      className="w-full flex items-center gap-3 px-4 py-3 hover:bg-accent transition-colors text-left min-w-0 overflow-hidden"
+                    >
+                      {getResultIcon(result)}
+                      <span
+                        className="text-foreground block max-w-full truncate whitespace-nowrap overflow-hidden text-ellipsis"
+                        title={result.name}
+                      >
+                        {result.name}
+                      </span>
+                    </button>
+                  ))}
+                </div>
+              )}
+
+              {searchOpen && searchQuery.length >= 2 && searchResults.length === 0 && !searching && (
+                <div className="absolute top-full left-4 right-4 mt-2 bg-popover border border-border rounded-lg shadow-lg p-4 text-center text-muted-foreground z-50">
+                  No results found for "{searchQuery}"
+                </div>
+              )}
+              {/* Close button for mobile search */}
+              {isMobile && mobileSearchOpen && (
+                <button
+                  onClick={() => setMobileSearchOpen(false)}
+                  className="p-2 hover:bg-accent rounded-lg transition-colors ml-1"
+                >
+                  <X size={20} className="text-muted-foreground" />
+                </button>
+              )}
+            </div>
+          )}
 
           {/* RIGHT: Theme Toggle, Notifications, Profile */}
-          <div className="flex items-center gap-3 flex-shrink-0">
+          <div className={`flex items-center gap-2 md:gap-3 flex-shrink-0 ${isMobile && mobileSearchOpen ? 'hidden' : ''}`}>
             {/* Theme Toggle */}
             <ThemeToggle />
 
@@ -672,7 +731,7 @@ export default function DashboardLayout({
         </header>
 
         {/* Page Content */}
-        <div className="flex-1 overflow-auto p-6">
+        <div className="flex-1 overflow-auto p-4 md:p-6">
           {typeof children === 'function'
             ? children({
               onUploadClick: () => setUploadOpen(true),

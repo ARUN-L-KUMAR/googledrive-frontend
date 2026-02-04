@@ -150,10 +150,10 @@ export default function ProfilePage() {
 
     return (
         <DashboardLayout currentPage="profile">
-            <div className="space-y-6 max-w-2xl mx-auto">
+            <div className="space-y-4 sm:space-y-6 max-w-2xl mx-auto">
                 <div>
-                    <h1 className="text-3xl font-bold text-foreground">Profile</h1>
-                    <p className="text-muted-foreground mt-2">Manage your personal information</p>
+                    <h1 className="text-2xl sm:text-3xl font-bold text-foreground">Profile</h1>
+                    <p className="text-muted-foreground mt-1 sm:mt-2 text-sm sm:text-base">Manage your personal information</p>
                 </div>
 
                 {loading ? (
@@ -165,9 +165,9 @@ export default function ProfilePage() {
                 ) : (
                     <div className="space-y-6">
                         {/* Profile Picture Section */}
-                        <Card className="p-6 shadow-md rounded-xl">
-                            <h2 className="text-xl font-semibold text-foreground mb-4">Profile Picture</h2>
-                            <div className="flex items-center gap-6">
+                        <Card className="p-4 sm:p-6 shadow-md rounded-xl">
+                            <h2 className="text-lg sm:text-xl font-semibold text-foreground mb-4">Profile Picture</h2>
+                            <div className="flex flex-col sm:flex-row items-center gap-4 sm:gap-6">
                                 <div className="relative">
                                     <div className="w-24 h-24 rounded-full overflow-hidden bg-muted flex items-center justify-center border-4 border-card shadow-lg">
                                         {previewUrl ? (
@@ -210,8 +210,8 @@ export default function ProfilePage() {
                         </Card>
 
                         {/* Personal Information Section */}
-                        <Card className="p-6 shadow-md rounded-xl">
-                            <h2 className="text-xl font-semibold text-foreground mb-4">Personal Information</h2>
+                        <Card className="p-4 sm:p-6 shadow-md rounded-xl">
+                            <h2 className="text-lg sm:text-xl font-semibold text-foreground mb-4">Personal Information</h2>
                             <div className="space-y-4">
                                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                     <div>

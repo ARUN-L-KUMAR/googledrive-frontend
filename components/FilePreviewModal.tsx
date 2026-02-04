@@ -216,13 +216,13 @@ export default function FilePreviewModal({
         <Dialog open={isOpen} onOpenChange={onClose}>
             <DialogContent
                 className={`${isFullscreen ? 'max-w-[95vw] max-h-[95vh]' : 'max-w-4xl'
-                    } p-0 overflow-hidden w-full`}
+                    } p-0 overflow-hidden w-full sm:max-w-[90vw] md:max-w-4xl ${!isFullscreen ? 'max-h-[90vh]' : ''}`}
             >
                 {/* Visually hidden title for screen readers */}
                 <DialogTitle className="sr-only">{file?.name || 'File Preview'}</DialogTitle>
 
                 {/* Header */}
-                <div className="grid grid-cols-[1fr_auto] items-center p-4 border-b bg-gray-50 gap-4 overflow-hidden">
+                <div className="grid grid-cols-[1fr_auto] items-center p-2 sm:p-4 border-b bg-gray-50 gap-2 sm:gap-4 overflow-hidden">
                     <div className="min-w-0 overflow-hidden flex-1">
                         <h3
                             className="font-semibold text-gray-900 block max-w-full truncate whitespace-nowrap overflow-hidden text-ellipsis"
@@ -235,34 +235,35 @@ export default function FilePreviewModal({
                         </p>
                     </div>
 
-                    <div className="flex items-center gap-1">
+                    <div className="flex items-center gap-0.5 sm:gap-1">
                         {previewType === 'image' && (
                             <>
-                                <Button variant="ghost" size="sm" onClick={handleZoomOut}>
-                                    <ZoomOut size={18} />
+                                <Button variant="ghost" size="sm" onClick={handleZoomOut} className="h-8 w-8 p-0 sm:h-9 sm:w-9">
+                                    <ZoomOut size={16} className="sm:w-[18px] sm:h-[18px]" />
                                 </Button>
-                                <span className="text-sm text-gray-600 w-12 text-center">
+                                <span className="text-xs sm:text-sm text-gray-600 w-10 sm:w-12 text-center hidden sm:inline">
                                     {Math.round(zoom * 100)}%
                                 </span>
-                                <Button variant="ghost" size="sm" onClick={handleZoomIn}>
-                                    <ZoomIn size={18} />
+                                <Button variant="ghost" size="sm" onClick={handleZoomIn} className="h-8 w-8 p-0 sm:h-9 sm:w-9">
+                                    <ZoomIn size={16} className="sm:w-[18px] sm:h-[18px]" />
                                 </Button>
                             </>
                         )}
-                        <Button variant="ghost" size="sm" onClick={toggleFullscreen}>
-                            {isFullscreen ? <Minimize2 size={18} /> : <Maximize2 size={18} />}
+                        <Button variant="ghost" size="sm" onClick={toggleFullscreen} className="h-8 w-8 p-0 sm:h-9 sm:w-9">
+                            {isFullscreen ? <Minimize2 size={16} className="sm:w-[18px] sm:h-[18px]" /> : <Maximize2 size={16} className="sm:w-[18px] sm:h-[18px]" />}
                         </Button>
                         {file && (
                             <Button
                                 variant="ghost"
                                 size="sm"
                                 onClick={() => onDownload?.(file._id)}
+                                className="h-8 w-8 p-0 sm:h-9 sm:w-9"
                             >
-                                <Download size={18} />
+                                <Download size={16} className="sm:w-[18px] sm:h-[18px]" />
                             </Button>
                         )}
-                        <Button variant="ghost" size="sm" onClick={onClose}>
-                            <X size={18} />
+                        <Button variant="ghost" size="sm" onClick={onClose} className="h-8 w-8 p-0 sm:h-9 sm:w-9">
+                            <X size={16} className="sm:w-[18px] sm:h-[18px]" />
                         </Button>
                     </div>
                 </div>

@@ -48,26 +48,35 @@ export default function SelectionActionBar({
     if (selectedCount === 0) return null;
 
     return (
-        <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 animate-in slide-in-from-bottom-4 duration-300">
-            <div className="bg-gray-900/95 backdrop-blur-lg rounded-2xl shadow-2xl border border-gray-700/50 px-6 py-4">
-                <div className="flex items-center gap-6">
-                    {/* Selection Info */}
-                    <div className="flex items-center gap-3 pr-6 border-r border-gray-700">
-                        <div className="flex items-center justify-center w-10 h-10 bg-blue-600 rounded-full">
-                            <CheckSquare size={20} className="text-white" />
+        <div className="fixed bottom-4 md:bottom-6 left-1/2 -translate-x-1/2 z-50 animate-in slide-in-from-bottom-4 duration-300 w-[calc(100%-2rem)] max-w-fit">
+            <div className="bg-gray-900/95 backdrop-blur-lg rounded-xl md:rounded-2xl shadow-2xl border border-gray-700/50 px-3 py-3 md:px-6 md:py-4">
+                <div className="flex items-center gap-2 md:gap-6">
+                    {/* Selection Info - Hidden on small screens */}
+                    <div className="hidden sm:flex items-center gap-3 pr-4 md:pr-6 border-r border-gray-700">
+                        <div className="flex items-center justify-center w-8 h-8 md:w-10 md:h-10 bg-blue-600 rounded-full">
+                            <CheckSquare size={16} className="text-white md:hidden" />
+                            <CheckSquare size={20} className="text-white hidden md:block" />
                         </div>
                         <div>
-                            <p className="text-white font-semibold text-lg">
+                            <p className="text-white font-semibold text-base md:text-lg">
                                 {selectedCount} selected
                             </p>
-                            <p className="text-gray-400 text-sm">
+                            <p className="text-gray-400 text-xs md:text-sm">
                                 {remainingCount} remaining
                             </p>
                         </div>
                     </div>
 
+                    {/* Mobile-only selection count */}
+                    <div className="sm:hidden flex items-center gap-2">
+                        <div className="flex items-center justify-center w-8 h-8 bg-blue-600 rounded-full">
+                            <CheckSquare size={14} className="text-white" />
+                        </div>
+                        <span className="text-white font-semibold text-sm">{selectedCount}</span>
+                    </div>
+
                     {/* Action Buttons */}
-                    <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-1 md:gap-2">
                         <Button
                             variant="ghost"
                             size="sm"
@@ -116,7 +125,7 @@ export default function SelectionActionBar({
                             <span className="hidden sm:inline">New Folder</span>
                         </Button>
 
-                        <div className="w-px h-8 bg-gray-700 mx-2" />
+                        <div className="w-px h-6 md:h-8 bg-gray-700 mx-1 md:mx-2" />
 
                         <Button
                             variant="ghost"
@@ -129,7 +138,7 @@ export default function SelectionActionBar({
                             <span className="hidden sm:inline">Delete</span>
                         </Button>
 
-                        <div className="w-px h-8 bg-gray-700 mx-2" />
+                        <div className="w-px h-6 md:h-8 bg-gray-700 mx-1 md:mx-2" />
 
                         <Button
                             variant="ghost"
