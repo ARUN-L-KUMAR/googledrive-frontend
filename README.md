@@ -1,117 +1,91 @@
-# ☁️ Cloud Storage App (Frontend)
+# Google Drive Clone - Backend API
 
-This is the **Frontend** repository for the Cloud Storage application, built with **Next.js 16**, **React 19**, and **Tailwind CSS 4**. It provides a Google Drive-like interface for managing your files and folders, communicating with a separate Express.js backend.
+This is the Node.js/Express backend for the Google Drive Clone application. It handles authentication, file management via AWS S3, and database operations with MongoDB.
 
-> **Note:** This repository works in conjunction with the [Backend Repository](https://github.com/ARUN-L-KUMAR/googledrive-backend) (or your backend location).
+## Features
 
-![Next.js](https://img.shields.io/badge/Next.js-16.0-black?style=for-the-badge&logo=next.js)
-![React](https://img.shields.io/badge/React-19-61DAFB?style=for-the-badge&logo=react)
-![TypeScript](https://img.shields.io/badge/TypeScript-5.0-3178C6?style=for-the-badge&logo=typescript)
-![Tailwind CSS](https://img.shields.io/badge/Tailwind-4.1-06B6D4?style=for-the-badge&logo=tailwindcss)
+- **Authentication**: JWT-based auth (Register, Login, Forgot Password, Google OAuth)
+- **File Management**: Upload, download, move, copy, rename, delete files/folders using AWS S3
+- **Sharing**: Generate shareable links with expiration
+- **Organization**: Nested folders, trash/restore functionality
+- **Analytics**: Storage usage and file type breakdown
 
----
+## Tech Stack
 
-## ✨ Features (UI)
+- **Runtime**: Node.js
+- **Framework**: Express.js
+- **Database**: MongoDB (Mongoose)
+- **Storage**: AWS S3
+- **Email**: Nodemailer
 
-### 📁 File Management
-- **Drag & Drop Uploads** - Seamless file uploading
-- **File Previews** - Built-in viewer for images, audio, video, PDF, and text
-- **Grid & List Views** - Flexible file display options
-- **Context Menus** - Right-click actions for files and folders
+## Prerequisites
 
-### � Organization
-- **Folder Navigation** - Breadcrumb-based navigation system
-- **Multi-select** - Bulk operations (Move, Copy, Delete)
-- **Starred Items** - Quick access to important files
-- **Trash** - Soft delete with restore functionality
+- Node.js (v18+)
+- MongoDB Atlas connection string
+- AWS S3 bucket credentials
+- Google OAuth credentials
 
-### � User Experience
-- **Dark/Light Mode** - Fully responsive theme system
-- **Responsive Design** - Optimized for mobile and desktop
-- **Toast Notifications** - Real-time feedback for actions
-- **Search** - Instant file and folder search
+## Installation
 
----
+1. Clone the repository and navigate to the backend folder:
+   ```bash
+   cd googledrive-backend
+   ```
 
-## 🛠️ Tech Stack
+2. Install dependencies:
+   ```bash
+   npm install
+   ```
 
-| Technology | Description |
-|------------|-------------|
-| **Next.js 16** | App Router, Server Components, and Layouts |
-| **React 19** | Latest clean UI library |
-| **Tailwind CSS 4** | Styling and design system |
-| **Radix UI** | Accessible UI primitives (Dialogs, Dropdowns, etc.) |
-| **Lucide React** | Consistent icon set |
-| **Recharts** | Analytics visualization |
-| **React Hook Form** | Form validation and handling |
+3. Create a `.env` file in the root directory (copy from frontend or use template):
+   ```env
+   PORT=5000
+   MONGO_URI=your_mongodb_uri
+   JWT_SECRET=your_jwt_secret
+   FRONTEND_URL=http://localhost:3001
+   
+   # AWS S3
+   AWS_ACCESS_KEY_ID=your_key_id
+   AWS_SECRET_ACCESS_KEY=your_secret_key
+   AWS_REGION=your_region
+   AWS_BUCKET_NAME=your_bucket_name
 
----
+   # Email
+   EMAIL_USER=your_email@gmail.com
+   EMAIL_PASS=your_app_password
 
-## 📦 Installation
+   # Google OAuth
+   GOOGLE_CLIENT_ID=your_client_id
+   GOOGLE_CLIENT_SECRET=your_client_secret
+   ```
 
-### Prerequisites
-- Node.js 18+ installed
-- The **Backend** server running (see Backend Repo)
+## Running the Server
 
-### 1. Clone the Repository
-```bash
-git clone <your-frontend-repo-url>
-cd googledrive-frontend
-```
-
-### 2. Install Dependencies
-```bash
-npm install
-```
-
-### 3. Environment Setup
-Create a `.env.local` file in the root directory:
-
-```env
-# Backend API URL (Express server)
-NEXT_PUBLIC_API_URL=http://localhost:5000
-
-# Authentication (optional if handled purely by backend cookies)
-# NEXT_PUBLIC_AUTH_DOMAIN=...
-```
-
-### 4. Run the Development Server
+Start the development server:
 ```bash
 npm run dev
 ```
 
-Open [http://localhost:3001](http://localhost:3001) in your browser.
-
-> The app will proxy `/api/*` requests to your backend running at `http://localhost:5000`.
-
----
-
-## 🚀 Deployment
-
-The frontend is optimized for deployment on **Vercel**.
-
-1. Push your code to GitHub.
-2. Import the project in Vercel.
-3. Add the `NEXT_PUBLIC_API_URL` environment variable (set to your deployed Backend URL, e.g., on Render).
-4. Deploy!
-
----
-
-## � Project Structure
-
-```
-app/
-├── components/          # Reusable UI components
-├── lib/                 # Utilities and API helpers
-├── app/                 # Next.js App Router pages
-│   ├── login/           # Auth pages
-│   ├── dashboard/       # Main app interface
-│   └── ...
-└── public/              # Static assets
+Start for production:
+```bash
+npm start
 ```
 
----
+The server will run on `http://localhost:5000`.
 
-## 📄 License
+## API Endpoints
 
-This project is licensed under the MIT License.
+- **Auth**: `/api/auth` (Login, Register, Verify)
+- **Files**: `/api/files` (Upload, listing, CRUD)
+- **Folders**: `/api/folders` (Create folder)
+- **Drive**: `/api/drive` (Browsing)
+- **Users**: `/api/users` (Profile, password)
+- **Share**: `/api/share` (Public links)
+
+## Project Structure
+
+- `config/` - Database configuration
+- `middleware/` - Auth and error handling middleware
+- `models/` - Mongoose schemas (User, File, etc.)
+- `routes/` - API route handlers
+- `utils/` - Helpers (S3, Email, Auth)
