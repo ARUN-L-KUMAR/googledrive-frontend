@@ -83,7 +83,7 @@ export default function ResetPasswordPage() {
   if (!token) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100 p-4">
-        <Card className="w-full max-w-md">
+        <Card className="w-full max-w-md bg-white">
           <div className="p-8">
             <AlertCircle className="w-12 h-12 text-red-600 mx-auto mb-4" />
             <h1 className="text-2xl font-bold text-center text-gray-900 mb-2">Invalid Link</h1>
@@ -103,7 +103,7 @@ export default function ResetPasswordPage() {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100 p-4">
-      <Card className="w-full max-w-md">
+      <Card className="w-full max-w-md bg-white">
         <div className="p-8">
           <h1 className="text-3xl font-bold text-center mb-2 text-gray-900">CloudDrive</h1>
           <p className="text-center text-gray-600 mb-8">Set your new password</p>
@@ -133,6 +133,7 @@ export default function ResetPasswordPage() {
                 required
                 placeholder="••••••••"
                 disabled={loading}
+                className="bg-white border-gray-300 text-gray-900"
               />
             </div>
 
@@ -146,6 +147,7 @@ export default function ResetPasswordPage() {
                 required
                 placeholder="••••••••"
                 disabled={loading}
+                className="bg-white border-gray-300 text-gray-900"
               />
             </div>
 

@@ -114,10 +114,10 @@ export default function ShareDialog({ isOpen, onClose, file }: ShareDialogProps)
                 </DialogHeader>
 
                 <div className="space-y-4 py-4 overflow-hidden">
-                    <div className="bg-gray-50 p-4 rounded-lg overflow-hidden">
-                        <p className="text-sm text-gray-600">Sharing:</p>
+                    <div className="bg-muted p-4 rounded-lg overflow-hidden">
+                        <p className="text-sm text-muted-foreground">Sharing:</p>
                         <p
-                            className="font-medium text-gray-900 truncate block w-full"
+                            className="font-medium text-foreground truncate block w-full"
                             title={file?.name}
                         >
                             {file?.name}
@@ -127,7 +127,7 @@ export default function ShareDialog({ isOpen, onClose, file }: ShareDialogProps)
                     {!shareLink ? (
                         <div className="space-y-4">
                             <div>
-                                <label className="block text-sm font-medium text-gray-700 mb-2">
+                                <label className="block text-sm font-medium text-muted-foreground mb-2">
                                     Link expires in
                                 </label>
                                 <Select value={expirySeconds} onValueChange={setExpirySeconds}>
@@ -157,7 +157,7 @@ export default function ShareDialog({ isOpen, onClose, file }: ShareDialogProps)
                     ) : (
                         <div className="space-y-4">
                             <div>
-                                <label className="block text-sm font-medium text-gray-700 mb-2">
+                                <label className="block text-sm font-medium text-muted-foreground mb-2">
                                     Share link
                                 </label>
                                 <div className="flex gap-2">
@@ -165,7 +165,7 @@ export default function ShareDialog({ isOpen, onClose, file }: ShareDialogProps)
                                         type="text"
                                         value={shareLink}
                                         readOnly
-                                        className="flex-1 px-3 py-2 text-sm border border-gray-300 rounded-lg bg-gray-50 text-gray-700"
+                                        className="flex-1 px-3 py-2 text-sm border border-border rounded-lg bg-muted text-foreground"
                                     />
                                     <Button
                                         onClick={handleCopyLink}

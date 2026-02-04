@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { useTheme } from 'next-themes';
 import DashboardLayout from '@/components/DashboardLayout';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -34,6 +35,9 @@ import {
   FileText,
   Music,
   File,
+  Sun,
+  Moon,
+  Monitor,
 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 
@@ -56,6 +60,8 @@ interface StorageBreakdown {
 export default function SettingsPage() {
   const router = useRouter();
   const { toast } = useToast();
+  const { theme, setTheme } = useTheme();
+  const [mounted, setMounted] = useState(false);
   const [settings, setSettings] = useState<UserSettings | null>(null);
   const [loading, setLoading] = useState(true);
   const [storageBreakdown, setStorageBreakdown] = useState<StorageBreakdown | null>(null);
@@ -78,6 +84,7 @@ export default function SettingsPage() {
   const [deleteConfirmText, setDeleteConfirmText] = useState('');
 
   useEffect(() => {
+    setMounted(true);
     fetchSettings();
     fetchStorageBreakdown();
     loadPreferences();
@@ -253,8 +260,8 @@ export default function SettingsPage() {
     <DashboardLayout currentPage="settings">
       <div className="space-y-6 max-w-2xl mx-auto">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">Settings</h1>
-          <p className="text-gray-600 mt-2">Manage your account security and preferences</p>
+          <h1 className="text-3xl font-bold text-foreground">Settings</h1>
+          <p className="text-muted-foreground mt-2">Manage your account security and preferences</p>
         </div>
 
         {loading ? (
@@ -269,11 +276,11 @@ export default function SettingsPage() {
             <Card className="p-6 shadow-md rounded-xl">
               <div className="flex items-center gap-2 mb-4">
                 <Shield className="w-5 h-5 text-blue-600" />
-                <h2 className="text-xl font-semibold text-gray-900">Security</h2>
+                <h2 className="text-xl font-semibold text-foreground">Security</h2>
               </div>
               <div className="space-y-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                  <label className="block text-sm font-medium text-muted-foreground mb-1">
                     Current Password
                   </label>
                   <Input
@@ -287,7 +294,7 @@ export default function SettingsPage() {
                 </div>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                    <label className="block text-sm font-medium text-muted-foreground mb-1">
                       New Password
                     </label>
                     <Input
@@ -300,7 +307,7 @@ export default function SettingsPage() {
                     />
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                    <label className="block text-sm font-medium text-muted-foreground mb-1">
                       Confirm Password
                     </label>
                     <Input
@@ -344,13 +351,46 @@ export default function SettingsPage() {
             <Card className="p-6 shadow-md rounded-xl">
               <div className="flex items-center gap-2 mb-4">
                 <SettingsIcon className="w-5 h-5 text-blue-600" />
-                <h2 className="text-xl font-semibold text-gray-900">Preferences</h2>
+                <h2 className="text-xl font-semibold text-foreground">Preferences</h2>
               </div>
               <div className="space-y-6">
+                {/* Theme Setting */}
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="font-medium text-gray-900">Default View Mode</p>
-                    <p className="text-sm text-gray-500">Choose how files are displayed</p>
+                    <p className="font-medium text-foreground">Theme</p>
+                    <p className="text-sm text-muted-foreground">Choose your preferred theme</p>
+                  </div>
+                  <Select value={mounted ? theme : 'light'} onValueChange={setTheme}>
+                    <SelectTrigger className="w-32">
+                      <SelectValue>
+                        {mounted && (
+                          <span className="flex items-center gap-2">
+                            {theme === 'light' && <Sun size={14} />}
+                            {theme === 'dark' && <Moon size={14} />}
+                            {theme === 'system' && <Monitor size={14} />}
+                            {theme === 'light' ? 'Light' : theme === 'dark' ? 'Dark' : 'System'}
+                          </span>
+                        )}
+                      </SelectValue>
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="light">
+                        <span className="flex items-center gap-2"><Sun size={14} />Light</span>
+                      </SelectItem>
+                      <SelectItem value="dark">
+                        <span className="flex items-center gap-2"><Moon size={14} />Dark</span>
+                      </SelectItem>
+                      <SelectItem value="system">
+                        <span className="flex items-center gap-2"><Monitor size={14} />System</span>
+                      </SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="font-medium text-foreground">Default View Mode</p>
+                    <p className="text-sm text-muted-foreground">Choose how files are displayed</p>
                   </div>
                   <Select value={viewMode} onValueChange={handleViewModeChange}>
                     <SelectTrigger className="w-32">
@@ -365,8 +405,8 @@ export default function SettingsPage() {
 
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="font-medium text-gray-900">Email Notifications</p>
-                    <p className="text-sm text-gray-500">Receive updates via email</p>
+                    <p className="font-medium text-foreground">Email Notifications</p>
+                    <p className="text-sm text-muted-foreground">Receive updates via email</p>
                   </div>
                   <Switch
                     checked={emailNotifications}
@@ -380,77 +420,77 @@ export default function SettingsPage() {
             <Card className="p-6 shadow-md rounded-xl">
               <div className="flex items-center gap-2 mb-4">
                 <HardDrive className="w-5 h-5 text-blue-600" />
-                <h2 className="text-xl font-semibold text-gray-900">Storage</h2>
+                <h2 className="text-xl font-semibold text-foreground">Storage</h2>
               </div>
               <div className="space-y-4">
                 <div>
                   <div className="flex justify-between text-sm mb-2">
-                    <span className="text-gray-600">
+                    <span className="text-muted-foreground">
                       {settings ? formatBytes(settings.storageUsed) : '0'} used
                     </span>
-                    <span className="text-gray-600">
+                    <span className="text-muted-foreground">
                       {settings ? formatBytes(settings.storageLimit) : '0'} total
                     </span>
                   </div>
-                  <div className="w-full bg-gray-200 rounded-full h-3">
+                  <div className="w-full bg-muted rounded-full h-3">
                     <div
                       className={`h-3 rounded-full transition-all ${storagePercentage > 90 ? 'bg-red-500' : storagePercentage > 70 ? 'bg-yellow-500' : 'bg-blue-600'
                         }`}
                       style={{ width: `${storagePercentage}%` }}
                     />
                   </div>
-                  <p className="text-sm text-gray-500 mt-2">
+                  <p className="text-sm text-muted-foreground mt-2">
                     {storagePercentage.toFixed(1)}% of storage used
                   </p>
                 </div>
 
                 {storageBreakdown && (
-                  <div className="space-y-3 pt-4 border-t">
-                    <p className="text-sm font-medium text-gray-700">Storage Breakdown</p>
+                  <div className="space-y-3 pt-4 border-t border-border">
+                    <p className="text-sm font-medium text-muted-foreground">Storage Breakdown</p>
                     <div className="space-y-2">
-                      <div className="flex items-center justify-between p-2 bg-gray-50 rounded-lg">
+                      <div className="flex items-center justify-between p-2 bg-muted rounded-lg">
                         <div className="flex items-center gap-2">
                           <Image className="w-4 h-4 text-pink-500" />
-                          <span className="text-sm text-gray-700">Images</span>
+                          <span className="text-sm text-foreground">Images</span>
                         </div>
-                        <span className="text-sm font-medium text-gray-900">
+                        <span className="text-sm font-medium text-foreground">
                           {formatBytes(storageBreakdown.images.size)}
                         </span>
                       </div>
-                      <div className="flex items-center justify-between p-2 bg-gray-50 rounded-lg">
+                      <div className="flex items-center justify-between p-2 bg-muted rounded-lg">
                         <div className="flex items-center gap-2">
                           <Video className="w-4 h-4 text-purple-500" />
-                          <span className="text-sm text-gray-700">Videos</span>
+                          <span className="text-sm text-foreground">Videos</span>
                         </div>
-                        <span className="text-sm font-medium text-gray-900">
+                        <span className="text-sm font-medium text-foreground">
                           {formatBytes(storageBreakdown.videos.size)}
                         </span>
                       </div>
-                      <div className="flex items-center justify-between p-2 bg-gray-50 rounded-lg">
+                      <div className="flex items-center justify-between p-2 bg-muted rounded-lg">
                         <div className="flex items-center gap-2">
                           <Music className="w-4 h-4 text-green-500" />
-                          <span className="text-sm text-gray-700">Audio</span>
+                          <span className="text-sm text-foreground">Audio</span>
                         </div>
-                        <span className="text-sm font-medium text-gray-900">
+                        <span className="text-sm font-medium text-foreground">
                           {formatBytes(storageBreakdown.audio.size)}
                         </span>
                       </div>
-                      <div className="flex items-center justify-between p-2 bg-gray-50 rounded-lg">
+                      <div className="flex items-center justify-between p-2 bg-muted rounded-lg">
                         <div className="flex items-center gap-2">
                           <FileText className="w-4 h-4 text-blue-500" />
-                          <span className="text-sm text-gray-700">Documents</span>
+                          <span className="text-sm text-foreground">Documents</span>
                         </div>
-                        <span className="text-sm font-medium text-gray-900">
+                        <span className="text-sm font-medium text-foreground">
                           {formatBytes(storageBreakdown.documents.size)}
                         </span>
                       </div>
                       {storageBreakdown.other.size > 0 && (
-                        <div className="flex items-center justify-between p-2 bg-gray-50 rounded-lg">
+                        <div className="flex items-center justify-between p-2 bg-muted rounded-lg">
                           <div className="flex items-center gap-2">
                             <File className="w-4 h-4 text-gray-500" />
-                            <span className="text-sm text-gray-700">Other</span>
+                            <span className="text-sm text-foreground">Other</span>
                           </div>
-                          <span className="text-sm font-medium text-gray-900">
+                          <span className="text-sm font-medium text-foreground">
                             {formatBytes(storageBreakdown.other.size)}
                           </span>
                         </div>
@@ -468,7 +508,7 @@ export default function SettingsPage() {
                 <h2 className="text-xl font-semibold text-red-600">Danger Zone</h2>
               </div>
               <div className="space-y-4">
-                <p className="text-sm text-gray-600">
+                <p className="text-sm text-muted-foreground">
                   Once you delete your account, there is no going back. All your files will be
                   permanently deleted. Please be certain.
                 </p>
@@ -499,7 +539,7 @@ export default function SettingsPage() {
             </DialogDescription>
           </DialogHeader>
           <div className="py-4">
-            <label className="block text-sm font-medium text-gray-700 mb-2">
+            <label className="block text-sm font-medium text-muted-foreground mb-2">
               Type <span className="font-bold text-red-600">DELETE</span> to confirm
             </label>
             <Input

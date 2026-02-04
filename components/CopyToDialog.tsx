@@ -175,7 +175,7 @@ export default function CopyToDialog({ isOpen, onClose, file, onSuccess }: CopyT
                                 >
                                     <Folder size={20} className="text-blue-500 flex-shrink-0" />
                                     <span
-                                        className="block max-w-full truncate whitespace-nowrap overflow-hidden text-ellipsis text-gray-900"
+                                        className="block max-w-full truncate whitespace-nowrap overflow-hidden text-ellipsis text-foreground"
                                         title={folder.name}
                                     >
                                         {folder.name}

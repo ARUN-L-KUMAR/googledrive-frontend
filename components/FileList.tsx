@@ -548,9 +548,9 @@ export default function FileList({
               <div
                 key={file._id}
                 ref={(el) => setItemRef(file._id, el)}
-                className={`group relative bg-white rounded-xl border-2 p-4 hover:shadow-lg transition-all cursor-pointer
-                  ${isSelected ? 'border-blue-500 bg-blue-50 shadow-md' : 'border-gray-200 hover:border-blue-300'}
-                  ${dragOverFolder === file._id ? 'bg-blue-50 border-blue-400 shadow-lg' : ''}
+                className={`group relative bg-card rounded-xl border-2 p-4 hover:shadow-lg transition-all cursor-pointer
+                  ${isSelected ? 'border-blue-500 bg-blue-500/10 shadow-md' : 'border-border hover:border-blue-300'}
+                  ${dragOverFolder === file._id ? 'bg-blue-50 dark:bg-blue-950 border-blue-400 shadow-lg' : ''}
                   ${draggedFile === file._id ? 'opacity-50' : ''}`}
                 onClick={(e) => handleRowClick(e, file, index)}
                 draggable={file.type === 'file'}
@@ -596,7 +596,7 @@ export default function FileList({
 
                 {/* File name */}
                 <p
-                  className="text-sm font-medium text-gray-900 text-center block max-w-full truncate whitespace-nowrap overflow-hidden text-ellipsis"
+                  className="text-sm font-medium text-foreground text-center block max-w-full truncate whitespace-nowrap overflow-hidden text-ellipsis"
                   title={file.name}
                 >
                   {file.name}
@@ -604,7 +604,7 @@ export default function FileList({
 
                 {/* File size for files */}
                 {file.type === 'file' && (
-                  <p className="text-xs text-gray-500 text-center mt-1">
+                  <p className="text-xs text-muted-foreground text-center mt-1">
                     {formatFileSize(file.size || 0)}
                   </p>
                 )}
@@ -620,7 +620,7 @@ export default function FileList({
   return (
     <div
       ref={containerRef}
-      className="bg-white rounded-lg border border-gray-200 overflow-hidden file-list-container"
+      className="bg-card rounded-lg border border-border overflow-hidden file-list-container"
       onMouseDown={handleMouseDown}
     >
       {/* Selection box overlay */}
@@ -638,7 +638,7 @@ export default function FileList({
 
       <table className="w-full">
         <thead>
-          <tr className="border-b border-gray-200 bg-gray-50">
+          <tr className="border-b border-border bg-muted">
             <th className="px-3 py-3 text-left w-10">
               <Checkbox
                 checked={selectedFiles.size === files.length && files.length > 0}
@@ -653,10 +653,10 @@ export default function FileList({
                 className="data-[state=checked]:bg-blue-600"
               />
             </th>
-            <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700">Name</th>
-            <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700">Size</th>
-            <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700">Modified</th>
-            <th className="px-6 py-3 text-right text-sm font-semibold text-gray-700">Actions</th>
+            <th className="px-6 py-3 text-left text-sm font-semibold text-foreground">Name</th>
+            <th className="px-6 py-3 text-left text-sm font-semibold text-foreground">Size</th>
+            <th className="px-6 py-3 text-left text-sm font-semibold text-foreground">Modified</th>
+            <th className="px-6 py-3 text-right text-sm font-semibold text-foreground">Actions</th>
           </tr>
         </thead>
         <tbody>
@@ -666,9 +666,9 @@ export default function FileList({
               <tr
                 key={file._id}
                 ref={(el) => setItemRef(file._id, el)}
-                className={`border-b border-gray-200 transition-colors cursor-pointer
-                  ${isSelected ? 'bg-blue-50' : 'hover:bg-gray-50'}
-                  ${dragOverFolder === file._id ? 'bg-blue-50 border-blue-300' : ''}
+                className={`border-b border-border transition-colors cursor-pointer
+                  ${isSelected ? 'bg-blue-500/10' : 'hover:bg-muted/50'}
+                  ${dragOverFolder === file._id ? 'bg-blue-50 dark:bg-blue-950 border-blue-300' : ''}
                   ${draggedFile === file._id ? 'opacity-50' : ''}`}
                 onClick={(e) => handleRowClick(e, file, index)}
                 draggable={file.type === 'file'}
@@ -703,7 +703,7 @@ export default function FileList({
                       getFileIcon(file.mimeType)
                     )}
                     <span
-                      className="block max-w-full truncate whitespace-nowrap overflow-hidden text-ellipsis text-gray-900 font-medium"
+                      className="block max-w-full truncate whitespace-nowrap overflow-hidden text-ellipsis text-foreground font-medium"
                       title={file.name}
                     >
                       {file.name}
@@ -713,10 +713,10 @@ export default function FileList({
                     )}
                   </div>
                 </td>
-                <td className="px-6 py-4 text-sm text-gray-600">
+                <td className="px-6 py-4 text-sm text-muted-foreground">
                   {file.type === 'folder' ? '—' : formatFileSize(file.size || 0)}
                 </td>
-                <td className="px-6 py-4 text-sm text-gray-600">{formatDate(file.updatedAt)}</td>
+                <td className="px-6 py-4 text-sm text-muted-foreground">{formatDate(file.updatedAt)}</td>
                 <td className="px-6 py-4 text-right" onClick={(e) => e.stopPropagation()}>
                   {renderActionsMenu(file)}
                 </td>

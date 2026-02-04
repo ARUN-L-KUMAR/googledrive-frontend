@@ -116,11 +116,11 @@ export default function NotificationsPage() {
             <div className="max-w-4xl mx-auto py-8">
                 <div className="flex items-center justify-between mb-8">
                     <div>
-                        <h1 className="text-2xl font-bold text-gray-900 flex items-center gap-2">
+                        <h1 className="text-2xl font-bold text-foreground flex items-center gap-2">
                             <Bell className="w-8 h-8 text-blue-600" />
                             Notifications
                         </h1>
-                        <p className="text-gray-500 mt-1">Stay updated with your account activity</p>
+                        <p className="text-muted-foreground mt-1">Stay updated with your account activity</p>
                     </div>
 
                     <Button
@@ -137,12 +137,12 @@ export default function NotificationsPage() {
                 {loading ? (
                     <div className="space-y-4">
                         {[1, 2, 3].map((i) => (
-                            <div key={i} className="h-20 bg-gray-100 rounded-lg animate-pulse" />
+                            <div key={i} className="h-20 bg-muted rounded-lg animate-pulse" />
                         ))}
                     </div>
                 ) : notifications.length === 0 ? (
-                    <Card className="p-12 text-center text-gray-500">
-                        <Bell className="w-12 h-12 mx-auto mb-4 text-gray-300" />
+                    <Card className="p-12 text-center text-muted-foreground">
+                        <Bell className="w-12 h-12 mx-auto mb-4 text-muted-foreground/50" />
                         <p className="text-lg font-medium">No notifications yet</p>
                         <p>You're all caught up!</p>
                     </Card>
@@ -152,25 +152,24 @@ export default function NotificationsPage() {
                             <Card
                                 key={notif._id}
                                 onClick={() => handleNotificationClick(notif)}
-                                className={`p-4 cursor-pointer transition-all hover:shadow-md border-l-4 ${notif.read ? 'border-l-transparent bg-white' : 'border-l-blue-500 bg-blue-50/30'
-                                    }`}
+                                className={`p-4 cursor-pointer transition-all hover:shadow-md border-l-4 ${notif.read ? 'border-l-transparent bg-card' : 'border-l-blue-500 bg-blue-500/10'}`}
                             >
                                 <div className="flex items-start gap-4">
-                                    <div className={`p-2 rounded-full ${notif.read ? 'bg-gray-100' : 'bg-white shadow-sm'}`}>
+                                    <div className={`p-2 rounded-full ${notif.read ? 'bg-muted' : 'bg-card shadow-sm'}`}>
                                         {getIcon(notif, 20)}
                                     </div>
 
                                     <div className="flex-1 min-w-0">
                                         <div className="flex justify-between items-start gap-2">
-                                            <h3 className={`font-semibold ${notif.read ? 'text-gray-800' : 'text-gray-900'}`}>
+                                            <h3 className={`font-semibold ${notif.read ? 'text-muted-foreground' : 'text-foreground'}`}>
                                                 {notif.title}
                                             </h3>
-                                            <span className="text-xs text-gray-400 whitespace-nowrap">
+                                            <span className="text-xs text-muted-foreground whitespace-nowrap">
                                                 {new Date(notif.createdAt).toLocaleDateString()} {new Date(notif.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                                             </span>
                                         </div>
 
-                                        <p className={`text-sm mt-1 truncate ${notif.read ? 'text-gray-500' : 'text-gray-700'}`}>
+                                        <p className={`text-sm mt-1 truncate ${notif.read ? 'text-muted-foreground' : 'text-foreground'}`}>
                                             {notif.message}
                                         </p>
                                     </div>

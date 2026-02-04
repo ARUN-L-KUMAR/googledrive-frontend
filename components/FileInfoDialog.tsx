@@ -58,20 +58,20 @@ export default function FileInfoDialog({ isOpen, onClose, file }: FileInfoDialog
 
                 <div className="py-4 space-y-4">
                     {/* File Icon and Name */}
-                    <div className="flex items-center gap-3 p-4 bg-gray-50 rounded-lg">
+                    <div className="flex items-center gap-3 p-4 bg-muted rounded-lg">
                         {file.type === 'folder' ? (
                             <Folder className="w-10 h-10 text-blue-500 flex-shrink-0" />
                         ) : (
-                            <File className="w-10 h-10 text-gray-400 flex-shrink-0" />
+                            <File className="w-10 h-10 text-muted-foreground flex-shrink-0" />
                         )}
                         <div className="flex-1 w-0 min-w-0">
                             <p
-                                className="font-semibold text-gray-900 truncate"
+                                className="font-semibold text-foreground truncate"
                                 title={file.name}
                             >
                                 {file.name}
                             </p>
-                            <p className="text-sm text-gray-500">{file.type === 'folder' ? 'Folder' : 'File'}</p>
+                            <p className="text-sm text-muted-foreground">{file.type === 'folder' ? 'Folder' : 'File'}</p>
                         </div>
                     </div>
 
@@ -80,36 +80,36 @@ export default function FileInfoDialog({ isOpen, onClose, file }: FileInfoDialog
                         {file.type === 'file' && (
                             <>
                                 <div className="flex items-center gap-3">
-                                    <FileType size={18} className="text-gray-400" />
+                                    <FileType size={18} className="text-muted-foreground" />
                                     <div>
-                                        <p className="text-sm text-gray-500">Type</p>
-                                        <p className="text-gray-900">{file.mimeType || 'Unknown'}</p>
+                                        <p className="text-sm text-muted-foreground">Type</p>
+                                        <p className="text-foreground">{file.mimeType || 'Unknown'}</p>
                                     </div>
                                 </div>
 
                                 <div className="flex items-center gap-3">
-                                    <HardDrive size={18} className="text-gray-400" />
+                                    <HardDrive size={18} className="text-muted-foreground" />
                                     <div>
-                                        <p className="text-sm text-gray-500">Size</p>
-                                        <p className="text-gray-900">{formatFileSize(file.size)}</p>
+                                        <p className="text-sm text-muted-foreground">Size</p>
+                                        <p className="text-foreground">{formatFileSize(file.size)}</p>
                                     </div>
                                 </div>
                             </>
                         )}
 
                         <div className="flex items-center gap-3">
-                            <Calendar size={18} className="text-gray-400" />
+                            <Calendar size={18} className="text-muted-foreground" />
                             <div>
-                                <p className="text-sm text-gray-500">Modified</p>
-                                <p className="text-gray-900">{formatDate(file.updatedAt)}</p>
+                                <p className="text-sm text-muted-foreground">Modified</p>
+                                <p className="text-foreground">{formatDate(file.updatedAt)}</p>
                             </div>
                         </div>
 
                         <div className="flex items-center gap-3">
                             <div className={`w-4 h-4 rounded-full ${file.isStarred ? 'bg-yellow-400' : 'bg-gray-300'}`} />
                             <div>
-                                <p className="text-sm text-gray-500">Starred</p>
-                                <p className="text-gray-900">{file.isStarred ? 'Yes' : 'No'}</p>
+                                <p className="text-sm text-muted-foreground">Starred</p>
+                                <p className="text-foreground">{file.isStarred ? 'Yes' : 'No'}</p>
                             </div>
                         </div>
                     </div>

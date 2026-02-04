@@ -113,7 +113,7 @@ export default function BulkDeleteDialog({
 
                     {/* File list preview */}
                     <div className="bg-gray-50 rounded-lg p-3">
-                        <p className="text-sm text-gray-600 mb-2">
+                        <p className="text-sm text-muted-foreground mb-2">
                             {fileNames.length} item(s) will be moved to trash:
                         </p>
                         <div className="max-h-32 overflow-auto">
@@ -141,7 +141,7 @@ export default function BulkDeleteDialog({
                     {/* Progress indicator */}
                     {deleting && progress.total > 0 && (
                         <div>
-                            <div className="flex items-center justify-between text-sm text-gray-600 mb-2">
+                            <div className="flex items-center justify-between text-sm text-muted-foreground mb-2">
                                 <span>Deleting files...</span>
                                 <span>{progress.current} / {progress.total}</span>
                             </div>

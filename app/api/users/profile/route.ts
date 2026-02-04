@@ -19,7 +19,7 @@ export async function GET(request: NextRequest) {
       // Check if it's an external URL (Google, etc.) or an S3 URL
       const isExternalUrl = user.profilePicture.startsWith('https://lh3.googleusercontent.com') ||
         user.profilePicture.startsWith('https://googleusercontent.com') ||
-        !user.profilePicture.includes(process.env.AWS_S3_BUCKET_NAME || 'cloud-storage-bucket');
+        !user.profilePicture.includes(process.env.AWS_BUCKET_NAME || 'cloud-storage-bucket');
 
       if (isExternalUrl) {
         // Return external URLs directly (e.g., Google profile pictures)

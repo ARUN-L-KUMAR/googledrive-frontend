@@ -91,40 +91,40 @@ export default function StorageAnalytics() {
         <Card className="p-6 space-y-6">
             <div className="flex items-center gap-2">
                 <TrendingUp size={24} className="text-blue-600" />
-                <h2 className="text-xl font-bold text-gray-900">Storage Analytics</h2>
+                <h2 className="text-xl font-bold text-foreground">Storage Analytics</h2>
             </div>
 
             {/* Overview Stats */}
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                <div className="bg-blue-50 rounded-lg p-4 text-center">
+                <div className="bg-blue-500/10 dark:bg-blue-500/20 rounded-lg p-4 text-center">
                     <p className="text-3xl font-bold text-blue-600">{analytics.totalFiles}</p>
-                    <p className="text-sm text-gray-600">Files</p>
+                    <p className="text-sm text-muted-foreground">Files</p>
                 </div>
-                <div className="bg-purple-50 rounded-lg p-4 text-center">
+                <div className="bg-purple-500/10 dark:bg-purple-500/20 rounded-lg p-4 text-center">
                     <p className="text-3xl font-bold text-purple-600">{analytics.totalFolders}</p>
-                    <p className="text-sm text-gray-600">Folders</p>
+                    <p className="text-sm text-muted-foreground">Folders</p>
                 </div>
-                <div className="bg-green-50 rounded-lg p-4 text-center">
+                <div className="bg-green-500/10 dark:bg-green-500/20 rounded-lg p-4 text-center">
                     <p className="text-3xl font-bold text-green-600">{formatBytes(analytics.totalSize)}</p>
-                    <p className="text-sm text-gray-600">Total Used</p>
+                    <p className="text-sm text-muted-foreground">Total Used</p>
                 </div>
-                <div className="bg-orange-50 rounded-lg p-4 text-center">
+                <div className="bg-orange-500/10 dark:bg-orange-500/20 rounded-lg p-4 text-center">
                     <p className="text-3xl font-bold text-orange-600">{usagePercent.toFixed(1)}%</p>
-                    <p className="text-sm text-gray-600">Storage Used</p>
+                    <p className="text-sm text-muted-foreground">Storage Used</p>
                 </div>
             </div>
 
             {/* Storage Bar */}
             <div>
                 <div className="flex justify-between mb-2 text-sm">
-                    <span className="text-gray-700">
+                    <span className="text-foreground">
                         {formatBytes(analytics.storageUsed)} of {formatBytes(analytics.storageLimit)} used
                     </span>
-                    <span className="text-gray-500">
+                    <span className="text-muted-foreground">
                         {formatBytes(analytics.storageLimit - analytics.storageUsed)} free
                     </span>
                 </div>
-                <div className="w-full bg-gray-200 rounded-full h-3 overflow-hidden">
+                <div className="w-full bg-muted rounded-full h-3 overflow-hidden">
                     <div
                         className={`h-3 rounded-full transition-all ${usagePercent > 90 ? 'bg-red-500' : usagePercent > 70 ? 'bg-yellow-500' : 'bg-blue-600'
                             }`}
@@ -135,7 +135,7 @@ export default function StorageAnalytics() {
 
             {/* File Type Breakdown */}
             <div>
-                <h3 className="text-lg font-semibold text-gray-900 mb-4">Storage by Type</h3>
+                <h3 className="text-lg font-semibold text-foreground mb-4">Storage by Type</h3>
                 <div className="space-y-3">
                     {typeEntries.map(([type, data]) => {
                         const config = TYPE_CONFIG[type];
@@ -151,17 +151,17 @@ export default function StorageAnalytics() {
 
                         return (
                             <div key={type} className="flex items-center gap-3">
-                                <div className={`p-2 rounded-lg bg-${config.color}-100`}>
-                                    <Icon size={18} className={`text-${config.color}-600`} />
+                                <div className={`p-2 rounded-lg bg-${config.color}-100 dark:bg-${config.color}-500/20`}>
+                                    <Icon size={18} className={`text-${config.color}-600 dark:text-${config.color}-400`} />
                                 </div>
                                 <div className="flex-1">
                                     <div className="flex justify-between text-sm mb-1">
-                                        <span className="text-gray-700">{config.label}</span>
-                                        <span className="text-gray-500">
+                                        <span className="text-foreground">{config.label}</span>
+                                        <span className="text-muted-foreground">
                                             {data.count} files • {formatBytes(data.size)}
                                         </span>
                                     </div>
-                                    <div className="w-full bg-gray-100 rounded-full h-2">
+                                    <div className="w-full bg-muted rounded-full h-2">
                                         <div
                                             className={`h-2 rounded-full ${colors[config.color]}`}
                                             style={{ width: `${percentage}%` }}
@@ -177,25 +177,25 @@ export default function StorageAnalytics() {
             {/* Largest Files */}
             {analytics.largestFiles.length > 0 && (
                 <div>
-                    <h3 className="text-lg font-semibold text-gray-900 mb-4">Largest Files</h3>
+                    <h3 className="text-lg font-semibold text-foreground mb-4">Largest Files</h3>
                     <div className="space-y-2">
                         {analytics.largestFiles.map((file, index) => (
                             <div
                                 key={file._id}
-                                className="flex items-center justify-between p-3 bg-gray-50 rounded-lg"
+                                className="flex items-center justify-between p-3 bg-muted rounded-lg"
                             >
                                 <div className="flex items-center gap-3 min-w-0 overflow-hidden">
-                                    <span className="w-6 h-6 flex items-center justify-center bg-gray-200 rounded text-sm font-medium text-gray-600 flex-shrink-0">
+                                    <span className="w-6 h-6 flex items-center justify-center bg-muted-foreground/20 rounded text-sm font-medium text-muted-foreground flex-shrink-0">
                                         {index + 1}
                                     </span>
                                     <span
-                                        className="text-gray-900 block max-w-[200px] truncate whitespace-nowrap overflow-hidden text-ellipsis"
+                                        className="text-foreground block max-w-[200px] truncate whitespace-nowrap overflow-hidden text-ellipsis"
                                         title={file.name}
                                     >
                                         {file.name}
                                     </span>
                                 </div>
-                                <span className="text-sm font-medium text-gray-600">{formatBytes(file.size)}</span>
+                                <span className="text-sm font-medium text-muted-foreground">{formatBytes(file.size)}</span>
                             </div>
                         ))}
                     </div>

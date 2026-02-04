@@ -57,13 +57,13 @@ export default function NotificationDetailsDialog({
     const getBgColor = (type: string) => {
         switch (type) {
             case 'success':
-                return 'bg-green-50';
+                return 'bg-green-500/10';
             case 'warning':
-                return 'bg-yellow-50';
+                return 'bg-yellow-500/10';
             case 'error':
-                return 'bg-red-50';
+                return 'bg-red-500/10';
             default:
-                return 'bg-blue-50';
+                return 'bg-blue-500/10';
         }
     };
 
@@ -81,29 +81,28 @@ export default function NotificationDetailsDialog({
 
                 <div className="py-4 space-y-4">
                     <div className="space-y-1">
-                        <h4 className="text-sm font-medium text-gray-500 uppercase tracking-wider">Message</h4>
-                        <p className="text-gray-900 bg-gray-50 p-3 rounded-md">{notification.message}</p>
+                        <h4 className="text-sm font-medium text-muted-foreground uppercase tracking-wider">Message</h4>
+                        <p className="text-foreground bg-muted p-3 rounded-md">{notification.message}</p>
                     </div>
 
                     <div className="flex gap-6">
                         <div className="space-y-1">
-                            <h4 className="text-sm font-medium text-gray-500 uppercase tracking-wider">Date</h4>
-                            <p className="text-gray-700">
+                            <h4 className="text-sm font-medium text-muted-foreground uppercase tracking-wider">Date</h4>
+                            <p className="text-foreground">
                                 {new Date(notification.createdAt).toLocaleDateString()}
                             </p>
                         </div>
                         <div className="space-y-1">
-                            <h4 className="text-sm font-medium text-gray-500 uppercase tracking-wider">Time</h4>
-                            <p className="text-gray-700">
+                            <h4 className="text-sm font-medium text-muted-foreground uppercase tracking-wider">Time</h4>
+                            <p className="text-foreground">
                                 {new Date(notification.createdAt).toLocaleTimeString()}
                             </p>
                         </div>
                     </div>
 
                     <div className="space-y-1">
-                        <h4 className="text-sm font-medium text-gray-500 uppercase tracking-wider">Status</h4>
-                        <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${notification.read ? 'bg-gray-100 text-gray-800' : 'bg-blue-100 text-blue-800'
-                            }`}>
+                        <h4 className="text-sm font-medium text-muted-foreground uppercase tracking-wider">Status</h4>
+                        <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${notification.read ? 'bg-muted text-muted-foreground' : 'bg-blue-500/20 text-blue-600 dark:text-blue-400'}`}>
                             {notification.read ? 'Read' : 'Unread'}
                         </span>
                     </div>
