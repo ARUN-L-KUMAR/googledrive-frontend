@@ -3,6 +3,7 @@ import { connectToDatabase } from '@/lib/db';
 import File from '@/lib/models/File';
 import { getCurrentUser } from '@/lib/auth';
 import { deleteFromS3 } from '@/lib/s3';
+import { logActivityAsync } from '@/lib/activity';
 
 export async function PATCH(
   request: NextRequest,
@@ -24,6 +25,8 @@ export async function PATCH(
       return NextResponse.json({ message: 'File not found' }, { status: 404 });
     }
 
+    const oldName = file.name;
+
     if (isStarred !== undefined) {
       file.isStarred = isStarred;
     }
@@ -33,6 +36,17 @@ export async function PATCH(
     }
 
     await file.save();
+
+    // Log activity for starring/unstarring
+    if (isStarred !== undefined) {
+      const action = isStarred ? 'file_star' : 'file_unstar';
+      logActivityAsync(user._id.toString(), action, file.type, file._id.toString(), file.name);
+    }
+
+    // Log activity for renaming
+    if (name !== undefined && name !== oldName) {
+      logActivityAsync(user._id.toString(), 'file_rename', file.type, file._id.toString(), file.name, { oldName });
+    }
 
     return NextResponse.json({ file }, { status: 200 });
   } catch (error) {
@@ -60,10 +74,16 @@ export async function DELETE(
       return NextResponse.json({ message: 'File not found' }, { status: 404 });
     }
 
+    const fileName = file.name;
+    const fileType = file.type;
+
     // Mark as trashed
     file.isTrashed = true;
     file.trashedAt = new Date();
     await file.save();
+
+    // Log activity
+    logActivityAsync(user._id.toString(), fileType === 'folder' ? 'folder_trash' : 'file_trash', fileType, file._id.toString(), fileName);
 
     // Note: We do NOT delete from S3 or update storage here anymore.
     // That should only happen on permanent delete.
@@ -74,3 +94,4 @@ export async function DELETE(
     return NextResponse.json({ message: 'Failed to delete file' }, { status: 500 });
   }
 }
+

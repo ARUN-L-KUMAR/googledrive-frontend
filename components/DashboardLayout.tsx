@@ -29,6 +29,7 @@ import {
   Share2,
   HardDrive,
   Link as LinkIcon,
+  History,
 } from 'lucide-react';
 import { ThemeToggle } from '@/components/ThemeToggle';
 import { Button } from '@/components/ui/button';
@@ -359,6 +360,7 @@ export default function DashboardLayout({
     { icon: Home, label: 'My Files', href: '/dashboard', id: 'files' },
     { icon: Star, label: 'Starred', href: '/dashboard/starred', id: 'starred' },
     { icon: Trash2, label: 'Trash', href: '/dashboard/trash', id: 'trash' },
+    { icon: History, label: 'History', href: '/dashboard/history', id: 'history' },
     { icon: BarChart3, label: 'Storage', href: '/dashboard/analytics', id: 'analytics' },
     { icon: User, label: 'Profile', href: '/dashboard/profile', id: 'profile' },
     { icon: Settings, label: 'Settings', href: '/dashboard/settings', id: 'settings' },

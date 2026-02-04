@@ -3,6 +3,7 @@ import { connectToDatabase } from '@/lib/db';
 import File from '@/lib/models/File';
 import { getCurrentUser } from '@/lib/auth';
 import { deleteFromS3 } from '@/lib/s3';
+import { logActivityAsync } from '@/lib/activity';
 
 export async function DELETE(
     request: NextRequest,
@@ -22,6 +23,10 @@ export async function DELETE(
         if (!file) {
             return NextResponse.json({ message: 'File not found' }, { status: 404 });
         }
+
+        const fileName = file.name;
+        const fileType = file.type;
+        const fileSize = file.size;
 
         // Permanent Deletion Logic - completely remove from everywhere
 
@@ -45,11 +50,12 @@ export async function DELETE(
         // 3. Permanently delete from Database
         await File.deleteOne({ _id: id });
 
+        // Log activity
+        logActivityAsync(user._id.toString(), 'file_permanent_delete', fileType, id, fileName, { size: fileSize });
+
         return NextResponse.json({ message: 'File permanently deleted' }, { status: 200 });
     } catch (error) {
         console.error('Permanent file deletion error:', error);
         return NextResponse.json({ message: 'Failed to delete file' }, { status: 500 });
     }
 }
-
-

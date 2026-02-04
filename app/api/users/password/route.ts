@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { connectToDatabase } from '@/lib/db';
 import User from '@/lib/models/User';
 import { getCurrentUser } from '@/lib/auth';
+import { logActivityAsync } from '@/lib/activity';
 
 export async function POST(request: NextRequest) {
     try {
@@ -42,6 +43,9 @@ export async function POST(request: NextRequest) {
         // Update password (will be hashed by pre-save hook)
         user.password = newPassword;
         await user.save();
+
+        // Log activity
+        logActivityAsync(userFromSession._id.toString(), 'password_change', 'user', userFromSession._id.toString(), user.email);
 
         return NextResponse.json({ message: 'Password updated successfully' });
     } catch (error) {

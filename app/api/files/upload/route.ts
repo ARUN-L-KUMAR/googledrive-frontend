@@ -5,6 +5,7 @@ import User from '@/lib/models/User';
 import { getCurrentUser } from '@/lib/auth';
 import { uploadToS3 } from '@/lib/s3';
 import { extractAlbumArt } from '@/lib/thumbnail';
+import { logActivityAsync } from '@/lib/activity';
 
 export async function POST(request: NextRequest) {
   try {
@@ -94,6 +95,9 @@ export async function POST(request: NextRequest) {
 
     // Create notification asynchronously
     createUploadNotification(user._id.toString(), filename, fileRecord._id.toString());
+
+    // Log activity
+    logActivityAsync(user._id.toString(), 'file_upload', 'file', fileRecord._id.toString(), filename, { size: fileSize, mimeType });
 
     return NextResponse.json({ file: fileRecord }, { status: 201 });
   } catch (error) {

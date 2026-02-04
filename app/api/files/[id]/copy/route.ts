@@ -4,6 +4,7 @@ import File from '@/lib/models/File';
 import User from '@/lib/models/User';
 import { getCurrentUser } from '@/lib/auth';
 import { S3Client, CopyObjectCommand } from '@aws-sdk/client-s3';
+import { logActivityAsync } from '@/lib/activity';
 
 const s3Client = new S3Client({
     region: process.env.AWS_REGION!,
@@ -98,6 +99,13 @@ export async function POST(
         // Update user's storage used
         await User.findByIdAndUpdate(user._id, {
             $inc: { storageUsed: originalFile.size },
+        });
+
+        // Log activity
+        logActivityAsync(user._id.toString(), 'file_copy', 'file', newFile._id.toString(), newFile.name, {
+            originalFileId: originalFile._id.toString(),
+            originalFileName: originalFile.name,
+            targetFolderId: targetFolderId || 'root'
         });
 
         return NextResponse.json({

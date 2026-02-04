@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { connectToDatabase } from '@/lib/db';
 import File from '@/lib/models/File';
 import { getCurrentUser } from '@/lib/auth';
+import { logActivityAsync } from '@/lib/activity';
 
 // POST - Create a new folder
 export async function POST(request: NextRequest) {
@@ -68,6 +69,9 @@ export async function POST(request: NextRequest) {
             console.error('Failed to create notification:', notifErr);
             // Don't fail the request if notification fails
         }
+
+        // Log activity
+        logActivityAsync(user._id.toString(), 'folder_create', 'folder', folder._id.toString(), name.trim());
 
         return NextResponse.json({ folder }, { status: 201 });
     } catch (error) {

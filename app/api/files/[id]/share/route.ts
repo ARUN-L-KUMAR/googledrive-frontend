@@ -4,6 +4,7 @@ import File from '@/lib/models/File';
 import ShareLink from '@/lib/models/ShareLink';
 import { getCurrentUser } from '@/lib/auth';
 import { randomUUID } from 'crypto';
+import { logActivityAsync } from '@/lib/activity';
 
 export async function POST(
     request: NextRequest,
@@ -51,6 +52,9 @@ export async function POST(
         // Build the share URL
         const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';
         const shareUrl = `${baseUrl}/api/share/${token}`;
+
+        // Log activity
+        logActivityAsync(user._id.toString(), 'share_link_create', 'file', file._id.toString(), file.name, { expiresInSeconds: expiry });
 
         return NextResponse.json({
             shareUrl,
@@ -133,6 +137,13 @@ export async function DELETE(
         if (!result) {
             return NextResponse.json({ error: 'Share link not found' }, { status: 404 });
         }
+
+        // Get file info for logging
+        const file = await File.findById(id);
+        const fileName = file?.name || 'Unknown';
+
+        // Log activity
+        logActivityAsync(user._id.toString(), 'share_link_revoke', 'file', id, fileName);
 
         return NextResponse.json({ message: 'Share link revoked' });
     } catch (error) {

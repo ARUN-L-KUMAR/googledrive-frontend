@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { connectToDatabase } from '@/lib/db';
 import File from '@/lib/models/File';
 import { getCurrentUser } from '@/lib/auth';
+import { logActivityAsync } from '@/lib/activity';
 
 export async function POST(
     request: NextRequest,
@@ -55,6 +56,9 @@ export async function POST(
         // Update the file's parent
         file.parentId = targetFolderId || null;
         await file.save();
+
+        // Log activity
+        logActivityAsync(user._id.toString(), 'file_move', file.type, file._id.toString(), file.name, { targetFolderId: targetFolderId || 'root' });
 
         return NextResponse.json({
             message: 'File moved successfully',

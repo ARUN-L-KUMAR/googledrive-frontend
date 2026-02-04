@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { connectToDatabase } from '@/lib/db';
 import File from '@/lib/models/File';
 import { getCurrentUser } from '@/lib/auth';
+import { logActivityAsync } from '@/lib/activity';
 
 export async function POST(
   request: NextRequest,
@@ -31,9 +32,13 @@ export async function POST(
     file.trashedAt = undefined;
     await file.save();
 
+    // Log activity
+    logActivityAsync(user._id.toString(), 'file_restore', file.type, file._id.toString(), file.name);
+
     return NextResponse.json({ file }, { status: 200 });
   } catch (error) {
     console.error('File restore error:', error);
     return NextResponse.json({ message: 'Failed to restore file' }, { status: 500 });
   }
 }
+

@@ -4,6 +4,7 @@ import User from '@/lib/models/User';
 import { getCurrentUser } from '@/lib/auth';
 import { uploadToS3, getSignedS3Url } from '@/lib/s3';
 import crypto from 'crypto';
+import { logActivityAsync } from '@/lib/activity';
 
 export async function POST(request: NextRequest) {
     try {
@@ -48,6 +49,9 @@ export async function POST(request: NextRequest) {
 
         // Generate a signed URL to return to the frontend for immediate display
         const signedUrl = await getSignedS3Url(s3Key);
+
+        // Log activity
+        logActivityAsync(user._id.toString(), 'avatar_change', 'user', user._id.toString(), user.email);
 
         return NextResponse.json({
             message: 'Avatar uploaded successfully',
