@@ -386,7 +386,6 @@ export default function DashboardLayout({
     { icon: Home, label: 'My Files', href: '/dashboard', id: 'files' },
     { icon: Star, label: 'Starred', href: '/dashboard/starred', id: 'starred' },
     { icon: Trash2, label: 'Trash', href: '/dashboard/trash', id: 'trash' },
-    { icon: History, label: 'History', href: '/dashboard/history', id: 'history' },
     { icon: BarChart3, label: 'Storage', href: '/dashboard/analytics', id: 'analytics' },
     { icon: User, label: 'Profile', href: '/dashboard/profile', id: 'profile' },
     { icon: Settings, label: 'Settings', href: '/dashboard/settings', id: 'settings' },
@@ -626,6 +625,15 @@ export default function DashboardLayout({
           <div className={`flex items-center gap-2 md:gap-3 flex-shrink-0 ${isMobile && mobileSearchOpen ? 'hidden' : ''}`}>
             {/* Theme Toggle */}
             <ThemeToggle />
+
+            {/* History Button */}
+            <button
+              onClick={() => router.push('/dashboard/history')}
+              className="p-2 hover:bg-accent rounded-lg transition-colors relative"
+              title="Activity History"
+            >
+              <History size={22} className="text-muted-foreground" />
+            </button>
 
             {/* Notifications Bell */}
             <div ref={notificationRef} className="relative">
