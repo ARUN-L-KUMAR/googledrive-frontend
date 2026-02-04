@@ -123,7 +123,7 @@ function LoginForm() {
             variant="outline"
             onClick={handleGoogleSignIn}
             disabled={googleLoading || loading}
-            className="w-full flex items-center justify-center gap-3 mb-6 py-5 bg-white border-gray-300 hover:bg-gray-50 text-gray-700"
+            className="w-full flex items-center justify-center gap-3 mb-6 py-5 bg-white border-gray-300 hover:bg-gray-50 text-gray-700 hover:text-gray-700"
           >
             <GoogleIcon />
             <span className="font-medium">

@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { connectToDatabase } from '@/lib/db';
 import User from '@/lib/models/User';
 import { getCurrentUser } from '@/lib/auth';
-import { uploadToS3 } from '@/lib/s3';
+import { uploadToS3, getSignedS3Url } from '@/lib/s3';
 import crypto from 'crypto';
 
 export async function POST(request: NextRequest) {
@@ -42,13 +42,16 @@ export async function POST(request: NextRequest) {
         // Upload to S3 (key, body, mimeType)
         const result = await uploadToS3(s3Key, buffer, file.type);
 
-        // Update user profile picture
+        // Update user profile picture (store the raw S3 URL)
         user.profilePicture = result.url;
         await user.save();
 
+        // Generate a signed URL to return to the frontend for immediate display
+        const signedUrl = await getSignedS3Url(s3Key);
+
         return NextResponse.json({
             message: 'Avatar uploaded successfully',
-            profilePicture: result.url,
+            profilePicture: signedUrl,
         });
     } catch (error) {
         console.error('Avatar upload error:', error);
