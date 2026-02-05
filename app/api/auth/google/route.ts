@@ -5,7 +5,7 @@ function getAppUrl(request: NextRequest): string {
     // Try to get the URL from various headers (works with Vercel, proxies, etc.)
     const forwardedHost = request.headers.get('x-forwarded-host');
     const forwardedProto = request.headers.get('x-forwarded-proto') || 'https';
-    const host = forwardedHost || request.headers.get('host') || 'localhost:3001';
+    const host = forwardedHost || request.headers.get('host') || 'localhost:3000';
 
     // Determine protocol
     const protocol = host.includes('localhost') ? 'http' : forwardedProto;

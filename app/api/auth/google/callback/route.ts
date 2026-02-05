@@ -32,7 +32,7 @@ function getAppUrl(request: NextRequest): string {
     // Fall back to headers
     const forwardedHost = request.headers.get('x-forwarded-host');
     const forwardedProto = request.headers.get('x-forwarded-proto') || 'https';
-    const host = forwardedHost || request.headers.get('host') || 'localhost:3001';
+    const host = forwardedHost || request.headers.get('host') || 'localhost:3000';
 
     const protocol = host.includes('localhost') ? 'http' : forwardedProto;
 

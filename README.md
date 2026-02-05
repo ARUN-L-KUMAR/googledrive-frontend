@@ -1,6 +1,6 @@
 # ☁️ Cloud Storage App
 
-A modern, full-featured cloud storage application built with **Next.js 16**, **MongoDB**, and **AWS S3**. This application provides a Google Drive-like experience with secure file storage, folder management, sharing capabilities, and more.
+A modern, full-featured cloud storage application built with **Next.js 16**, **MongoDB**, and **AWS S3**. This application provides a Google Drive-like experience with secure file storage, folder management, sharing capabilities, **mobile responsive design**, and built-in **dark/light mode** support and more.
 
 ![Next.js](https://img.shields.io/badge/Next.js-16.0-black?style=for-the-badge&logo=next.js)
 ![React](https://img.shields.io/badge/React-19-61DAFB?style=for-the-badge&logo=react)
@@ -8,6 +8,7 @@ A modern, full-featured cloud storage application built with **Next.js 16**, **M
 ![AWS S3](https://img.shields.io/badge/AWS-S3-FF9900?style=for-the-badge&logo=amazon-aws)
 ![TypeScript](https://img.shields.io/badge/TypeScript-5.0-3178C6?style=for-the-badge&logo=typescript)
 ![Tailwind CSS](https://img.shields.io/badge/Tailwind-4.1-06B6D4?style=for-the-badge&logo=tailwindcss)
+![Radix UI](https://img.shields.io/badge/Radix%20UI-161618?style=for-the-badge&logo=radix-ui)
 
 ---
 
@@ -16,7 +17,7 @@ A modern, full-featured cloud storage application built with **Next.js 16**, **M
 ### 📁 File Management
 - **Upload Files** - Drag & drop or click to upload files with progress tracking
 - **Download Files** - Secure file downloads using pre-signed S3 URLs
-- **File Preview** - In-browser preview for images, videos, audio, PDFs, and text files
+- **File Preview** - In-browser preview for images, videos, audio (with album art), PDFs, and text files
 - **Bulk Operations** - Select multiple files for move, copy, or delete operations
 - **File Information** - View detailed file metadata and properties
 
@@ -39,6 +40,7 @@ A modern, full-featured cloud storage application built with **Next.js 16**, **M
 ### ⭐ Organization
 - **Starred Files** - Mark important files as starred for quick access
 - **Recent Files** - Quick access to recently accessed files
+- **History Log** - Track all file activities (uploads, moves, deletes, etc.)
 - **Search** - Search files and folders by name
 
 ### 📊 Storage Analytics
@@ -79,6 +81,10 @@ A modern, full-featured cloud storage application built with **Next.js 16**, **M
 | **Lucide React** | Beautiful icon library |
 | **Recharts** | Charting library for analytics |
 | **React Hook Form** | Form handling with Zod validation |
+| **Sonner** | Stacked toast notifications |
+| **Vaul** | Drawer component for mobile |
+| **Music-Metadata** | Audio metadata & album art extraction |
+| **React Resizable Panels** | Resizable layout panels |
 
 ### Backend
 | Technology | Description |
@@ -176,6 +182,7 @@ cloud-storage-app/
 │   │   └── users/                # User management
 │   ├── dashboard/                # Dashboard pages
 │   │   ├── analytics/            # Storage analytics page
+│   │   ├── history/              # History/Activity log page
 │   │   ├── notifications/        # Notifications page
 │   │   ├── profile/              # User profile page
 │   │   ├── settings/             # Settings page
