@@ -10,6 +10,16 @@ A modern, full-featured cloud storage application built with **Next.js 16**, **M
 ![Tailwind CSS](https://img.shields.io/badge/Tailwind-4.1-06B6D4?style=for-the-badge&logo=tailwindcss)
 ![Radix UI](https://img.shields.io/badge/Radix%20UI-161618?style=for-the-badge&logo=radix-ui)
 
+
+---
+
+## 🔗 Project Links
+- **Live Application**: [https://c-drive.vercel.app/](https://c-drive.vercel.app/)
+- **GitHub Repository**: [https://github.com/ARUN-L-KUMAR/googledrive-fullstack](https://github.com/ARUN-L-KUMAR/googledrive-fullstack)
+- **Frontend Repository**: [https://github.com/ARUN-L-KUMAR/googledrive-fullstack/tree/frontend](https://github.com/ARUN-L-KUMAR/googledrive-fullstack/tree/frontend)
+- **Backend Repository**: [https://github.com/ARUN-L-KUMAR/googledrive-fullstack/tree/backend](https://github.com/ARUN-L-KUMAR/googledrive-fullstack/tree/backend)
+- **Demo Video**: [https://youtu.be/qZdoQwG8ecw](https://youtu.be/qZdoQwG8ecw)
+
 ---
 
 ## ✨ Features
